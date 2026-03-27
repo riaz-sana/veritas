@@ -1,0 +1,753 @@
+{
+  "isolation": {
+    "precision": 0.8125,
+    "recall": 1.0,
+    "f1": 0.896551724137931,
+    "tp": 13,
+    "tn": 9,
+    "fp": 3,
+    "fn": 0,
+    "per_item": [
+      {
+        "domain": "financial",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.08,
+        "classification": "TN",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference",
+          "scope_error",
+          "logical_inconsistency",
+          "temporal_error"
+        ]
+      },
+      {
+        "domain": "financial",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "logical_inconsistency"
+        ]
+      },
+      {
+        "domain": "financial",
+        "error_type": "entity_swap",
+        "is_faithful": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.96,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "logical_inconsistency",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "medical",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.91,
+        "classification": "TN",
+        "failure_modes": [
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "medical",
+        "error_type": "fabricated_fact",
+        "is_faithful": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.78,
+        "classification": "TP",
+        "failure_modes": [
+          "unsupported_inference",
+          "scope_error",
+          "scope_error",
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.85,
+        "classification": "TN",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "fabricated_fact",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "scope_error",
+          "factual_error",
+          "factual_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "legal",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.88,
+        "classification": "TN",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "legal",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.99,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.35,
+        "classification": "TN",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error",
+          "logical_inconsistency",
+          "unsupported_inference",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "unsupported_claim",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "logical_inconsistency",
+          "unsupported_inference",
+          "logical_inconsistency",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.2,
+        "classification": "TN",
+        "failure_modes": [
+          "unsupported_inference",
+          "unsupported_inference",
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.12,
+        "classification": "TN",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error",
+          "unsupported_inference",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "legal",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.62,
+        "classification": "FP",
+        "failure_modes": [
+          "source_conflict",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "legal",
+        "error_type": "scope_expansion",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.99,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.15,
+        "classification": "TN",
+        "failure_modes": [
+          "factual_error",
+          "scope_error",
+          "unsupported_inference",
+          "unsupported_inference",
+          "logical_inconsistency"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference",
+          "unsupported_inference",
+          "scope_error",
+          "logical_inconsistency"
+        ]
+      },
+      {
+        "domain": "general",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.62,
+        "classification": "FP",
+        "failure_modes": [
+          "temporal_error",
+          "scope_error",
+          "logical_inconsistency",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "general",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.96,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.25,
+        "classification": "TN",
+        "failure_modes": [
+          "source_conflict",
+          "unsupported_inference",
+          "scope_error",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "fabricated_fact",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "REFUTED",
+        "confidence": 0.78,
+        "classification": "FP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "temporal_error",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "unsupported_claim",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.96,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference",
+          "logical_inconsistency",
+          "scope_error",
+          "logical_inconsistency"
+        ]
+      }
+    ]
+  },
+  "debate": {
+    "precision": 0.6842105263157895,
+    "recall": 1.0,
+    "f1": 0.8125000000000001,
+    "tp": 13,
+    "tn": 6,
+    "fp": 6,
+    "fn": 0,
+    "per_item": [
+      {
+        "domain": "financial",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "REFUTED",
+        "confidence": 0.87,
+        "classification": "FP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "scope_error",
+          "unsupported_inference",
+          "logical_inconsistency"
+        ]
+      },
+      {
+        "domain": "financial",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.96,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "logical_inconsistency",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "financial",
+        "error_type": "entity_swap",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.96,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "medical",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.88,
+        "classification": "TN",
+        "failure_modes": [
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "medical",
+        "error_type": "fabricated_fact",
+        "is_faithful": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.82,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference",
+          "scope_error",
+          "unsupported_inference",
+          "temporal_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "TN",
+        "failure_modes": [
+          "source_conflict"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "fabricated_fact",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "scope_error",
+          "factual_error",
+          "factual_error",
+          "unsupported_inference",
+          "logical_inconsistency"
+        ]
+      },
+      {
+        "domain": "legal",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.78,
+        "classification": "TN",
+        "failure_modes": [
+          "unsupported_inference",
+          "scope_error",
+          "logical_inconsistency",
+          "factual_error"
+        ]
+      },
+      {
+        "domain": "legal",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.99,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.18,
+        "classification": "TN",
+        "failure_modes": [
+          "unsupported_inference",
+          "scope_error",
+          "unsupported_inference",
+          "unsupported_inference",
+          "logical_inconsistency"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "unsupported_claim",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "scope_error",
+          "logical_inconsistency",
+          "unsupported_inference",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.15,
+        "classification": "TN",
+        "failure_modes": [
+          "unsupported_inference",
+          "scope_error",
+          "unsupported_inference",
+          "logical_inconsistency"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.98,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "unsupported_inference",
+          "logical_inconsistency"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "REFUTED",
+        "confidence": 0.85,
+        "classification": "FP",
+        "failure_modes": [
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error",
+          "unsupported_inference",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.98,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "unsupported_inference",
+          "logical_inconsistency",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "legal",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.62,
+        "classification": "FP",
+        "failure_modes": [
+          "unsupported_inference",
+          "scope_error",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "legal",
+        "error_type": "scope_expansion",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.99,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "REFUTED",
+        "confidence": 0.78,
+        "classification": "FP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "scope_error",
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.98,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "general",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.62,
+        "classification": "FP",
+        "failure_modes": [
+          "scope_error",
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "domain": "general",
+        "error_type": "wrong_number",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "factual_error",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.12,
+        "classification": "TN",
+        "failure_modes": [
+          "source_conflict",
+          "unsupported_inference",
+          "unsupported_inference",
+          "scope_error",
+          "logical_inconsistency",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "domain": "technical",
+        "error_type": "fabricated_fact",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.98,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "logical_inconsistency",
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "faithful",
+        "is_faithful": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.75,
+        "classification": "FP",
+        "failure_modes": [
+          "temporal_error",
+          "factual_error",
+          "unsupported_inference",
+          "logical_inconsistency",
+          "scope_error"
+        ]
+      },
+      {
+        "domain": "scientific",
+        "error_type": "unsupported_claim",
+        "is_faithful": false,
+        "verdict": "REFUTED",
+        "confidence": 0.98,
+        "classification": "TP",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference",
+          "logical_inconsistency",
+          "scope_error"
+        ]
+      }
+    ]
+  }
+}
