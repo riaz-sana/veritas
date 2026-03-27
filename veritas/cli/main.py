@@ -53,5 +53,48 @@ def shell():
     from veritas.cli.shell import run_shell
     run_shell()
 
+@app.command()
+def benchmark(
+    dataset: str = typer.Option("sample", "--dataset", "-d", help="Dataset: sample, truthfulqa"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path"),
+    model_name: Optional[str] = typer.Option(None, "--model", "-m", help="LLM model to use"),
+):
+    """Run benchmarks against standard datasets."""
+    from veritas.benchmarks.datasets import load_sample, load_truthfulqa
+    from veritas.benchmarks.runner import run_benchmark
+
+    loaders = {
+        "sample": load_sample,
+        "truthfulqa": load_truthfulqa,
+    }
+
+    if dataset not in loaders:
+        console.print(f"[red]Unknown dataset: {dataset}. Available: {', '.join(loaders)}[/red]")
+        raise typer.Exit(code=1)
+
+    try:
+        items = loaders[dataset]()
+        console.print(f"Running benchmark on {len(items)} items from [bold]{dataset}[/bold]...")
+
+        config = Config()
+        if model_name:
+            config.model = model_name
+
+        result = asyncio.run(run_benchmark(items, dataset_name=dataset, config=config))
+
+        console.print(f"\n[bold]Results:[/bold]")
+        console.print(f"  Accuracy: {result.accuracy:.2%}")
+        console.print(f"  ECE:      {result.ece:.4f}")
+        console.print(f"  Duration: {result.duration_seconds:.1f}s")
+
+        if output:
+            with open(output, "w") as f:
+                f.write(result.to_json())
+            console.print(f"\nFull results written to {output}")
+
+    except Exception as e:
+        console.print(f"[red]Error: {e}[/red]")
+        raise typer.Exit(code=1)
+
 if __name__ == "__main__":
     app()
