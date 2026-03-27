@@ -1,0 +1,1377 @@
+{
+  "isolation": {
+    "mode": "ISO",
+    "total": 50,
+    "precision": 0.6,
+    "recall": 0.48,
+    "f1": 0.5333,
+    "balanced_accuracy": 0.58,
+    "tp": 12,
+    "tn": 17,
+    "fp": 8,
+    "fn": 13,
+    "duration_s": 804.6,
+    "per_item": [
+      {
+        "batch": 1,
+        "sample": 0,
+        "summarizer": "mistralai/Mistral-7B-Instruct-v0.3",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.78,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 1,
+        "summarizer": "microsoft/Phi-3-mini-4k-instruct",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "fp",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 2,
+        "summarizer": "Anthropic/claude-3-5-sonnet-20240620",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.88,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 3,
+        "summarizer": "cohere/command-r-08-2024",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.88,
+        "classification": "tp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 4,
+        "summarizer": "Qwen/Qwen2.5-7B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "fp",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 5,
+        "summarizer": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 6,
+        "summarizer": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.62,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 7,
+        "summarizer": "google/gemini-1.5-flash-001",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "fp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "unsupported_inference",
+          "scope_error",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 8,
+        "summarizer": "openai/GPT-3.5-Turbo",
+        "is_hallucinated": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.65,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 9,
+        "summarizer": "openai/gpt-4o",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.78,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 10,
+        "summarizer": "mistralai/Mistral-7B-Instruct-v0.3",
+        "is_hallucinated": true,
+        "verdict": "REFUTED",
+        "confidence": 0.95,
+        "classification": "tp",
+        "failure_modes": [
+          "unsupported_inference",
+          "logical_inconsistency",
+          "scope_error",
+          "source_conflict"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 11,
+        "summarizer": "microsoft/Phi-3-mini-4k-instruct",
+        "is_hallucinated": true,
+        "verdict": "REFUTED",
+        "confidence": 0.88,
+        "classification": "tp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "unsupported_inference",
+          "factual_error",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 12,
+        "summarizer": "Anthropic/claude-3-5-sonnet-20240620",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "tp",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "logical_inconsistency",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 13,
+        "summarizer": "cohere/command-r-08-2024",
+        "is_hallucinated": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.55,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 14,
+        "summarizer": "Qwen/Qwen2.5-7B-Instruct",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.55,
+        "classification": "tp",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 15,
+        "summarizer": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 16,
+        "summarizer": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.82,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 17,
+        "summarizer": "google/gemini-1.5-flash-001",
+        "is_hallucinated": true,
+        "verdict": "REFUTED",
+        "confidence": 0.88,
+        "classification": "tp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 18,
+        "summarizer": "openai/GPT-3.5-Turbo",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 19,
+        "summarizer": "openai/gpt-4o",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.45,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference",
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 20,
+        "summarizer": "mistralai/Mistral-7B-Instruct-v0.3",
+        "is_hallucinated": true,
+        "verdict": "REFUTED",
+        "confidence": 0.87,
+        "classification": "tp",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 21,
+        "summarizer": "microsoft/Phi-3-mini-4k-instruct",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.15,
+        "classification": "tn",
+        "failure_modes": [
+          "factual_error",
+          "logical_inconsistency",
+          "unsupported_inference",
+          "scope_error",
+          "source_conflict"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 22,
+        "summarizer": "Anthropic/claude-3-5-sonnet-20240620",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.82,
+        "classification": "fp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "factual_error",
+          "unsupported_inference",
+          "scope_error",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 23,
+        "summarizer": "cohere/command-r-08-2024",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.75,
+        "classification": "fp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "scope_error",
+          "unsupported_inference",
+          "temporal_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 24,
+        "summarizer": "Qwen/Qwen2.5-7B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.92,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 25,
+        "summarizer": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.9,
+        "classification": "tn",
+        "failure_modes": [
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 26,
+        "summarizer": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.92,
+        "classification": "tn",
+        "failure_modes": [
+          "factual_error",
+          "temporal_error",
+          "logical_inconsistency",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 27,
+        "summarizer": "google/gemini-1.5-flash-001",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.15,
+        "classification": "tn",
+        "failure_modes": [
+          "factual_error",
+          "logical_inconsistency",
+          "temporal_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 28,
+        "summarizer": "openai/GPT-3.5-Turbo",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.35,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error",
+          "logical_inconsistency",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 29,
+        "summarizer": "openai/gpt-4o",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.05,
+        "classification": "tn",
+        "failure_modes": [
+          "scope_error",
+          "logical_inconsistency",
+          "logical_inconsistency",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 30,
+        "summarizer": "mistralai/Mistral-7B-Instruct-v0.3",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 31,
+        "summarizer": "microsoft/Phi-3-mini-4k-instruct",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "tp",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 32,
+        "summarizer": "Anthropic/claude-3-5-sonnet-20240620",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "tp",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 33,
+        "summarizer": "cohere/command-r-08-2024",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.92,
+        "classification": "fn",
+        "failure_modes": []
+      },
+      {
+        "batch": 1,
+        "sample": 34,
+        "summarizer": "Qwen/Qwen2.5-7B-Instruct",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 35,
+        "summarizer": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 36,
+        "summarizer": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.85,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 37,
+        "summarizer": "google/gemini-1.5-flash-001",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.87,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 38,
+        "summarizer": "openai/GPT-3.5-Turbo",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.85,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 39,
+        "summarizer": "openai/gpt-4o",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.78,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 40,
+        "summarizer": "mistralai/Mistral-7B-Instruct-v0.3",
+        "is_hallucinated": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.72,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 41,
+        "summarizer": "microsoft/Phi-3-mini-4k-instruct",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.87,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 42,
+        "summarizer": "Anthropic/claude-3-5-sonnet-20240620",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "tp",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 43,
+        "summarizer": "cohere/command-r-08-2024",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 44,
+        "summarizer": "Qwen/Qwen2.5-7B-Instruct",
+        "is_hallucinated": true,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.62,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference",
+          "source_conflict"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 45,
+        "summarizer": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.78,
+        "classification": "tp",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 46,
+        "summarizer": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.85,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 47,
+        "summarizer": "google/gemini-1.5-flash-001",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "tp",
+        "failure_modes": [
+          "source_conflict",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 48,
+        "summarizer": "openai/GPT-3.5-Turbo",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.85,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 49,
+        "summarizer": "openai/gpt-4o",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.62,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      }
+    ]
+  },
+  "debate": {
+    "mode": "DEB",
+    "total": 50,
+    "precision": 0.4839,
+    "recall": 0.6,
+    "f1": 0.5357,
+    "balanced_accuracy": 0.48,
+    "tp": 15,
+    "tn": 9,
+    "fp": 16,
+    "fn": 10,
+    "duration_s": 1940.3,
+    "per_item": [
+      {
+        "batch": 1,
+        "sample": 0,
+        "summarizer": "mistralai/Mistral-7B-Instruct-v0.3",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.78,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 1,
+        "summarizer": "microsoft/Phi-3-mini-4k-instruct",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.62,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 2,
+        "summarizer": "Anthropic/claude-3-5-sonnet-20240620",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.78,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 3,
+        "summarizer": "cohere/command-r-08-2024",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.88,
+        "classification": "tp",
+        "failure_modes": [
+          "unsupported_inference",
+          "logical_inconsistency",
+          "scope_error",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 4,
+        "summarizer": "Qwen/Qwen2.5-7B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.55,
+        "classification": "fp",
+        "failure_modes": [
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 5,
+        "summarizer": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.78,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 6,
+        "summarizer": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 7,
+        "summarizer": "google/gemini-1.5-flash-001",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.62,
+        "classification": "fp",
+        "failure_modes": [
+          "unsupported_inference",
+          "scope_error",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 8,
+        "summarizer": "openai/GPT-3.5-Turbo",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 9,
+        "summarizer": "openai/gpt-4o",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 10,
+        "summarizer": "mistralai/Mistral-7B-Instruct-v0.3",
+        "is_hallucinated": true,
+        "verdict": "REFUTED",
+        "confidence": 0.97,
+        "classification": "tp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "unsupported_inference",
+          "temporal_error",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 11,
+        "summarizer": "microsoft/Phi-3-mini-4k-instruct",
+        "is_hallucinated": true,
+        "verdict": "REFUTED",
+        "confidence": 0.92,
+        "classification": "tp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "unsupported_inference",
+          "scope_error",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 12,
+        "summarizer": "Anthropic/claude-3-5-sonnet-20240620",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.62,
+        "classification": "tp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "factual_error",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 13,
+        "summarizer": "cohere/command-r-08-2024",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 14,
+        "summarizer": "Qwen/Qwen2.5-7B-Instruct",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.78,
+        "classification": "tp",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 15,
+        "summarizer": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.55,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error",
+          "factual_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 16,
+        "summarizer": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference",
+          "factual_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 17,
+        "summarizer": "google/gemini-1.5-flash-001",
+        "is_hallucinated": true,
+        "verdict": "REFUTED",
+        "confidence": 0.95,
+        "classification": "tp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "factual_error",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 18,
+        "summarizer": "openai/GPT-3.5-Turbo",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.35,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference",
+          "factual_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 19,
+        "summarizer": "openai/gpt-4o",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.62,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 20,
+        "summarizer": "mistralai/Mistral-7B-Instruct-v0.3",
+        "is_hallucinated": true,
+        "verdict": "REFUTED",
+        "confidence": 0.88,
+        "classification": "tp",
+        "failure_modes": [
+          "unsupported_inference",
+          "logical_inconsistency",
+          "temporal_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 21,
+        "summarizer": "microsoft/Phi-3-mini-4k-instruct",
+        "is_hallucinated": false,
+        "verdict": "REFUTED",
+        "confidence": 0.87,
+        "classification": "fp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "factual_error",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 22,
+        "summarizer": "Anthropic/claude-3-5-sonnet-20240620",
+        "is_hallucinated": false,
+        "verdict": "REFUTED",
+        "confidence": 0.88,
+        "classification": "fp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "unsupported_inference",
+          "scope_error",
+          "logical_inconsistency"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 23,
+        "summarizer": "cohere/command-r-08-2024",
+        "is_hallucinated": false,
+        "verdict": "REFUTED",
+        "confidence": 0.85,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error",
+          "scope_error",
+          "logical_inconsistency",
+          "unsupported_inference",
+          "source_conflict"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 24,
+        "summarizer": "Qwen/Qwen2.5-7B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.92,
+        "classification": "tn",
+        "failure_modes": [
+          "factual_error",
+          "logical_inconsistency",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 25,
+        "summarizer": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "REFUTED",
+        "confidence": 0.85,
+        "classification": "fp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "scope_error",
+          "temporal_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 26,
+        "summarizer": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "REFUTED",
+        "confidence": 0.91,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error",
+          "temporal_error",
+          "logical_inconsistency",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 27,
+        "summarizer": "google/gemini-1.5-flash-001",
+        "is_hallucinated": false,
+        "verdict": "REFUTED",
+        "confidence": 0.82,
+        "classification": "fp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "factual_error",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 28,
+        "summarizer": "openai/GPT-3.5-Turbo",
+        "is_hallucinated": false,
+        "verdict": "REFUTED",
+        "confidence": 0.85,
+        "classification": "fp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "factual_error",
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 29,
+        "summarizer": "openai/gpt-4o",
+        "is_hallucinated": false,
+        "verdict": "REFUTED",
+        "confidence": 0.82,
+        "classification": "fp",
+        "failure_modes": [
+          "scope_error",
+          "factual_error",
+          "logical_inconsistency",
+          "unsupported_inference",
+          "source_conflict"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 30,
+        "summarizer": "mistralai/Mistral-7B-Instruct-v0.3",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "fn",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 31,
+        "summarizer": "microsoft/Phi-3-mini-4k-instruct",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.78,
+        "classification": "fn",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 32,
+        "summarizer": "Anthropic/claude-3-5-sonnet-20240620",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.78,
+        "classification": "tp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 33,
+        "summarizer": "cohere/command-r-08-2024",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.91,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 34,
+        "summarizer": "Qwen/Qwen2.5-7B-Instruct",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.62,
+        "classification": "tp",
+        "failure_modes": [
+          "factual_error",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 35,
+        "summarizer": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "tp",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 36,
+        "summarizer": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.87,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 37,
+        "summarizer": "google/gemini-1.5-flash-001",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "fn",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 38,
+        "summarizer": "openai/GPT-3.5-Turbo",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.58,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 39,
+        "summarizer": "openai/gpt-4o",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.58,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 40,
+        "summarizer": "mistralai/Mistral-7B-Instruct-v0.3",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "fn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 41,
+        "summarizer": "microsoft/Phi-3-mini-4k-instruct",
+        "is_hallucinated": true,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "fn",
+        "failure_modes": [
+          "source_conflict",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 42,
+        "summarizer": "Anthropic/claude-3-5-sonnet-20240620",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.78,
+        "classification": "tp",
+        "failure_modes": [
+          "unsupported_inference",
+          "scope_error"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 43,
+        "summarizer": "cohere/command-r-08-2024",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.74,
+        "classification": "tp",
+        "failure_modes": [
+          "logical_inconsistency",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 44,
+        "summarizer": "Qwen/Qwen2.5-7B-Instruct",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.72,
+        "classification": "tp",
+        "failure_modes": [
+          "source_conflict",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 45,
+        "summarizer": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.82,
+        "classification": "tp",
+        "failure_modes": [
+          "factual_error",
+          "scope_error",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 46,
+        "summarizer": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+        "is_hallucinated": false,
+        "verdict": "VERIFIED",
+        "confidence": 0.82,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 47,
+        "summarizer": "google/gemini-1.5-flash-001",
+        "is_hallucinated": true,
+        "verdict": "PARTIAL",
+        "confidence": 0.65,
+        "classification": "tp",
+        "failure_modes": [
+          "source_conflict",
+          "unsupported_inference"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 48,
+        "summarizer": "openai/GPT-3.5-Turbo",
+        "is_hallucinated": false,
+        "verdict": "UNCERTAIN",
+        "confidence": 0.62,
+        "classification": "tn",
+        "failure_modes": [
+          "unsupported_inference",
+          "source_conflict"
+        ]
+      },
+      {
+        "batch": 1,
+        "sample": 49,
+        "summarizer": "openai/gpt-4o",
+        "is_hallucinated": false,
+        "verdict": "PARTIAL",
+        "confidence": 0.65,
+        "classification": "fp",
+        "failure_modes": [
+          "factual_error",
+          "unsupported_inference"
+        ]
+      }
+    ]
+  }
+}
