@@ -1,0 +1,1572 @@
+{
+  "total": 50,
+  "isolation_duration_s": 835.1,
+  "debate_duration_s": 2230.6,
+  "isolation": {
+    "subtle_factual": {
+      "name": "subtle_factual",
+      "total": 20,
+      "detection_rate": 1.0,
+      "false_negative_rate": 0.0,
+      "avg_confidence_on_errors": 0.943,
+      "per_item": [
+        {
+          "claim": "The first iPhone was released on June 29, 2008.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "factual_error",
+            "factual_error"
+          ],
+          "summary": "The first iPhone was released on June 29, 2007, not June 29, 2008 \u2014 the year in the claim is incorrect by exactly one year."
+        },
+        {
+          "claim": "The Berlin Wall fell on November 9, 1990.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "factual_error"
+          ],
+          "summary": "The Berlin Wall fell on November 9, 1989, not 1990 as claimed; the year is incorrect by one year."
+        },
+        {
+          "claim": "Neil Armstrong walked on the Moon on July 20, 1970.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "factual_error"
+          ],
+          "summary": "Neil Armstrong walked on the Moon on July 20, 1969, not 1970 \u2014 the claim contains a clear one-year temporal error."
+        },
+        {
+          "claim": "The Titanic sank on April 15, 1913.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "factual_error",
+            "factual_error"
+          ],
+          "summary": "The Titanic sank on April 15, 1912, not April 15, 1913 \u2014 the year in the claim is incorrect by one year."
+        },
+        {
+          "claim": "Python programming language was first released in 1992.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "unsupported_inference"
+          ],
+          "summary": "Python was first released in 1991 (version 0.9.0 on February 20, 1991), not 1992 as claimed."
+        },
+        {
+          "claim": "The human genome contains approximately 30,000 genes.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.82,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The ~30,000 gene figure is an outdated estimate from the 2001 Human Genome Project draft; current scientific consensus places protein-coding genes at approximately 19,000\u201320,500, making the claim factually inaccurate by modern standards."
+        },
+        {
+          "claim": "Mars is the third planet from the Sun.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error"
+          ],
+          "summary": "Mars is the fourth planet from the Sun, not the third; Earth holds the third position."
+        },
+        {
+          "claim": "Amazon was founded by Jeff Bezos in 1995.",
+          "expected": "REFUTED",
+          "verdict": "PARTIAL",
+          "confidence": 0.85,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "factual_error"
+          ],
+          "summary": "While Jeff Bezos did found Amazon, the founding year of 1995 is inaccurate \u2014 Amazon was incorporated on July 5, 1994; 1995 refers to the public launch of the Amazon.com website."
+        },
+        {
+          "claim": "The speed of sound in air is approximately 440 meters per second.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The speed of sound in air is approximately 343 m/s at 20\u00b0C, not 440 m/s; the claimed value appears to conflate the speed of sound with the 440 Hz concert pitch frequency of musical note A4."
+        },
+        {
+          "claim": "Mount Kilimanjaro is located in Kenya.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "Mount Kilimanjaro is located in Tanzania, not Kenya \u2014 three agents with high confidence confirmed this factual error."
+        },
+        {
+          "claim": "The Euro was introduced as currency on January 1, 2000.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "temporal_error",
+            "factual_error"
+          ],
+          "summary": "The Euro was not introduced on January 1, 2000; it was introduced as an electronic/accounting currency on January 1, 1999, and physical coins and banknotes entered circulation on January 1, 2002."
+        },
+        {
+          "claim": "Shakespeare was born in 1565.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "unsupported_inference"
+          ],
+          "summary": "Shakespeare was born in 1564, not 1565; three of four agents independently confirmed this as a clear factual error."
+        },
+        {
+          "claim": "The Great Fire of London occurred in 1667.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error"
+          ],
+          "summary": "The Great Fire of London occurred in 1666, not 1667 as claimed; the date is off by one year."
+        },
+        {
+          "claim": "The human body has 208 bones in adulthood.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The adult human body has 206 bones, not 208 as claimed; this contradicts the established medical consensus found in Gray's Anatomy and all standard anatomical references."
+        },
+        {
+          "claim": "The chemical symbol for potassium is Po.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error"
+          ],
+          "summary": "The chemical symbol for potassium is K (from Latin 'Kalium'), not Po; Po is the symbol for Polonium (atomic number 84)."
+        },
+        {
+          "claim": "The Wright Brothers' first flight was at Kitty Hawk in 1902.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "factual_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is refuted: the Wright Brothers' first powered flight occurred on December 17, 1903, not 1902, and the precise location was Kill Devil Hills, not Kitty Hawk (though the latter is widely accepted shorthand)."
+        },
+        {
+          "claim": "The Pacific Ocean is the second largest ocean on Earth.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error"
+          ],
+          "summary": "The Pacific Ocean is actually the largest ocean on Earth, not the second largest; the Atlantic Ocean holds the second-largest rank."
+        },
+        {
+          "claim": "DNA was first described by Watson and Crick in 1954.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The claim contains multiple clear factual errors: Watson and Crick published their double-helix structure paper in 1953 (not 1954), and DNA itself was first identified by Friedrich Miescher in 1869, not by Watson and Crick."
+        },
+        {
+          "claim": "HTTP was invented by Tim Berners-Lee in 1990.",
+          "expected": "REFUTED",
+          "verdict": "PARTIAL",
+          "confidence": 0.74,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "unsupported_inference"
+          ],
+          "summary": "Tim Berners-Lee is correctly credited as the inventor of HTTP, but the year 1990 is imprecise \u2014 the original proposal dates to 1989 and the first implementation (HTTP/0.9) to 1991."
+        },
+        {
+          "claim": "The Mona Lisa was painted by Leonardo da Vinci in 1507.",
+          "expected": "PARTIAL",
+          "verdict": "PARTIAL",
+          "confidence": 0.82,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "Leonardo da Vinci's authorship of the Mona Lisa is uncontested, but the specific date of 1507 is an oversimplification; scholarly consensus places its creation across a range of approximately 1503\u20131519."
+        }
+      ]
+    },
+    "scope_errors": {
+      "name": "scope_errors",
+      "total": 15,
+      "detection_rate": 1.0,
+      "false_negative_rate": 0.0,
+      "avg_confidence_on_errors": 0.9553,
+      "per_item": [
+        {
+          "claim": "All mammals give live birth.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "scope_error",
+            "logical_inconsistency",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that all mammals give live birth is clearly false, as monotremes (platypus and echidnas) are well-established egg-laying mammals that directly falsify the universal assertion."
+        },
+        {
+          "claim": "Antibiotics are effective against all infections.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "scope_error",
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that antibiotics are effective against all infections is clearly and thoroughly refuted by foundational medical science; antibiotics only target bacterial infections and are ineffective against viral, fungal, parasitic, and prion-based infections, and even fail against antibiotic-resistant bacterial strains."
+        },
+        {
+          "claim": "All planets in our solar system have moons.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that all planets in our solar system have moons is definitively false, as Mercury and Venus are well-established moonless planets."
+        },
+        {
+          "claim": "Water always boils at 100 degrees Celsius.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "scope_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that water 'always' boils at 100\u00b0C is demonstrably false, as the boiling point of water is dependent on atmospheric pressure, dissolved solutes, and other conditions, with 100\u00b0C applying only to pure water at standard atmospheric pressure (1 atm)."
+        },
+        {
+          "claim": "All swans are white.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim 'All swans are white' is definitively false, as black swans (Cygnus atratus) native to Australia and black-necked swans (Cygnus melancoryphus) native to South America are well-documented counterexamples."
+        },
+        {
+          "claim": "Humans have five senses.",
+          "expected": "REFUTED",
+          "verdict": "PARTIAL",
+          "confidence": 0.88,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that humans have five senses reflects a classical Aristotelian framework that is culturally widespread but scientifically incomplete, as modern neuroscience recognizes numerous additional sensory modalities including proprioception, vestibular sense, nociception, thermoception, and interoception."
+        },
+        {
+          "claim": "All metals are solid at room temperature.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that all metals are solid at room temperature is clearly false, as mercury is a well-known metal that is liquid at room temperature (melting point -38.83\u00b0C), and gallium and cesium are additional near-room-temperature counterexamples."
+        },
+        {
+          "claim": "Lightning always takes the shortest path to the ground.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is a well-known misconception: lightning follows the path of least electrical resistance, not the geometrically shortest path, and does not always reach the ground at all."
+        },
+        {
+          "claim": "Evolution always leads to more complex organisms.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that evolution 'always' leads to more complex organisms is refuted by overwhelming scientific consensus and numerous documented counterexamples of reductive evolution, including parasites, cave-dwelling organisms, endosymbionts, and the sustained simplicity of prokaryotes."
+        },
+        {
+          "claim": "All chemical reactions are reversible.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "logical_inconsistency",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that ALL chemical reactions are reversible is refuted by well-established chemistry, as numerous reactions (combustion, explosions, neutralization, precipitation) are classified as irreversible under practical conditions."
+        },
+        {
+          "claim": "Every country in the world has a president or a king.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The claim is demonstrably false, as numerous sovereign states are headed by emperors, sultans, emirs, grand dukes, princes, popes, or collective bodies \u2014 none of which are presidents or kings."
+        },
+        {
+          "claim": "All birds build nests.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that ALL birds build nests is clearly false, as multiple well-documented counterexamples \u2014 including brood parasites (cuckoos, cowbirds), Emperor penguins, and certain ground-nesters \u2014 demonstrate that nest-building is not a universal avian behavior."
+        },
+        {
+          "claim": "Diamonds are the hardest substance known to science.",
+          "expected": "PARTIAL",
+          "verdict": "REFUTED",
+          "confidence": 0.88,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "temporal_error"
+          ],
+          "summary": "The claim that diamonds are the hardest substance known to science is factually outdated; multiple materials including aggregated diamond nanorods, wurtzite boron nitride, and lonsdaleite have been shown or theoretically predicted to exceed diamond's hardness."
+        },
+        {
+          "claim": "The Sun rises in the east and sets in the west everywhere on Earth.",
+          "expected": "PARTIAL",
+          "verdict": "REFUTED",
+          "confidence": 0.95,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "scope_error",
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is refuted by the absolute qualifier 'everywhere on Earth': at the geographic poles cardinal directions are undefined and the Sun circles the horizon without rising or setting, polar regions experience midnight sun and polar night, and even at mid-latitudes the Sun only rises due east and sets due west on the two annual equinoxes."
+        },
+        {
+          "claim": "Gravity works the same way everywhere in the universe.",
+          "expected": "PARTIAL",
+          "verdict": "REFUTED",
+          "confidence": 0.82,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that gravity works the same way everywhere in the universe is an oversimplification refuted by multiple known counterexamples and unresolved anomalies, including GR breakdown at singularities, the unresolved quantum gravity problem, and cosmological-scale anomalies requiring dark matter/energy or modified gravity theories."
+        }
+      ]
+    },
+    "planted_confident": {
+      "name": "planted_confident",
+      "total": 15,
+      "detection_rate": 1.0,
+      "false_negative_rate": 0.0,
+      "avg_confidence_on_errors": 0.968,
+      "per_item": [
+        {
+          "claim": "It is an undisputed scientific fact that humans evolved from chimpanzees.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "The claim is refuted: humans did not evolve from chimpanzees but rather share a common ancestor with them, and the 'undisputed scientific fact' framing misrepresents the actual scientific consensus."
+        },
+        {
+          "claim": "Albert Einstein definitely failed his mathematics exams at ETH Zurich.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.96,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that Einstein 'definitely failed his mathematics exams at ETH Zurich' is a well-documented myth; he excelled in mathematics and physics, and his only exam failure was the 1895 ETH entrance exam, where he underperformed in French and botany\u2014not mathematics."
+        },
+        {
+          "claim": "The Great Wall of China is certainly the only man-made structure visible from the Moon.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is false on multiple grounds: no man-made structure, including the Great Wall of China, is visible from the Moon with the naked eye, as the Wall's width (~5\u20139 meters) is physically irresolvable at lunar distance (~384,400 km), and this myth has been explicitly debunked by astronauts and NASA."
+        },
+        {
+          "claim": "It has been conclusively proven that vitamin C prevents the common cold.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.96,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "unsupported_inference",
+            "scope_error",
+            "logical_inconsistency"
+          ],
+          "summary": "The claim is refuted on multiple grounds: scientific consensus, including Cochrane Reviews, shows vitamin C does not prevent the common cold in the general population, and the terms 'conclusively proven' and 'prevents' both significantly overstate the evidence."
+        },
+        {
+          "claim": "Thomas Edison unquestionably invented the light bulb single-handedly.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is refuted on multiple grounds: Edison neither invented the light bulb solely nor unquestionably, as prior inventors (Davy, de la Rue), concurrent independent inventors (Swan), Edison's own Menlo Park team, and extensive historical and legal disputes all directly contradict both 'single-handedly' and 'unquestionably.'"
+        },
+        {
+          "claim": "Scientists have definitively confirmed that we only use 10% of our brains.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "The claim is false on multiple independent grounds: neuroscience has definitively debunked the '10% of the brain' myth, not confirmed it, with neuroimaging, evolutionary biology, and clinical evidence all demonstrating that virtually all brain regions are active and functional."
+        },
+        {
+          "claim": "It is absolutely certain that Napoleon Bonaparte was extremely short for his time.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.95,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "The claim that Napoleon was 'absolutely certainly extremely short for his time' is refuted on two grounds: the underlying historical fact is a well-documented myth (he was average to slightly above average height for his era at ~5'6\"\u20135'7\"), and the epistemic qualifier 'absolutely certain' is logically indefensible for any historical claim."
+        },
+        {
+          "claim": "Research has conclusively shown that sugar is the primary cause of hyperactivity in children.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "unsupported_inference",
+            "scope_error",
+            "logical_inconsistency"
+          ],
+          "summary": "The claim is directly contradicted by scientific consensus; controlled studies, including a landmark 1995 JAMA meta-analysis, have found no causal link between sugar and hyperactivity in children, and the perceived association is attributed to expectation bias rather than physiology."
+        },
+        {
+          "claim": "Columbus was undeniably the first person to discover that the Earth is round.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "temporal_error",
+            "scope_error"
+          ],
+          "summary": "The claim is demonstrably false on multiple grounds: Earth's sphericity was established by ancient Greek scholars (Pythagoras, Aristotle, Eratosthenes) roughly 1,800 years before Columbus, whose 1492 voyage presupposed rather than discovered a round Earth, and the 'Columbus proved the Earth is round' narrative is a 19th-century myth."
+        },
+        {
+          "claim": "It is a well-established fact that the Sahara Desert has always been a desert.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "The claim that the Sahara has always been a desert is definitively false; robust paleoclimatological, archaeological, and geological evidence demonstrates that the Sahara underwent multiple humid 'Green Sahara' periods, including one as recently as 11,000\u20135,000 years ago, and was submerged under sea in geological antiquity."
+        },
+        {
+          "claim": "Galileo was without question the inventor of the telescope.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "Galileo did not invent the telescope; the invention is historically credited to Hans Lippershey in 1608, and the claim's use of 'without question' makes it doubly false."
+        },
+        {
+          "claim": "It is scientifically proven beyond doubt that cracking your knuckles causes arthritis.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "The claim is false on both counts: scientific evidence does not support a causal link between knuckle cracking and arthritis, and the phrase 'proven beyond doubt' inverts the actual scientific consensus, which runs in the opposite direction."
+        },
+        {
+          "claim": "It has been established with certainty that goldfish have a three-second memory.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "The claim is refuted on two grounds: the three-second goldfish memory is a debunked myth contradicted by scientific research showing goldfish can retain memories for months, and the phrase 'established with certainty' inverts the actual scientific consensus which firmly rejects this claim."
+        },
+        {
+          "claim": "Historians unanimously agree that Marie Antoinette said 'Let them eat cake.'",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "logical_inconsistency"
+          ],
+          "summary": "All four agents agree the claim is false on both counts: historians do not unanimously agree Marie Antoinette said 'Let them eat cake,' and the dominant scholarly consensus is actually that she almost certainly never said it."
+        },
+        {
+          "claim": "The United States was definitively founded in 1776 as a democracy.",
+          "expected": "PARTIAL",
+          "verdict": "REFUTED",
+          "confidence": 0.88,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "logical_inconsistency",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is refuted on multiple grounds: '1776' is not the definitive founding date (the Constitution was ratified in 1788/1789), the system established was explicitly called a 'republic' not a 'democracy' by the Founders, and the original system excluded the vast majority of residents from political participation."
+        }
+      ]
+    }
+  },
+  "debate": {
+    "subtle_factual": {
+      "name": "subtle_factual",
+      "total": 20,
+      "detection_rate": 1.0,
+      "false_negative_rate": 0.0,
+      "avg_confidence_on_errors": 0.9405,
+      "per_item": [
+        {
+          "claim": "The first iPhone was released on June 29, 2008.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The first iPhone was released on June 29, 2007, not June 29, 2008 \u2014 the claim has the correct day and month but is wrong by exactly one year."
+        },
+        {
+          "claim": "The Berlin Wall fell on November 9, 1990.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "temporal_error",
+            "scope_error"
+          ],
+          "summary": "The Berlin Wall fell on November 9, 1989, not November 9, 1990 \u2014 the claim contains a clear one-year temporal error, likely caused by conflation with German Reunification (October 3, 1990)."
+        },
+        {
+          "claim": "Neil Armstrong walked on the Moon on July 20, 1970.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "temporal_error",
+            "factual_error"
+          ],
+          "summary": "Neil Armstrong walked on the Moon on July 20, 1969, not July 20, 1970 \u2014 the claim contains a clear one-year temporal error."
+        },
+        {
+          "claim": "The Titanic sank on April 15, 1913.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "temporal_error",
+            "logical_inconsistency"
+          ],
+          "summary": "The Titanic sank on April 15, 1912, not April 15, 1913 \u2014 the claim contains a clear one-year temporal error."
+        },
+        {
+          "claim": "Python programming language was first released in 1992.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.95,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "temporal_error",
+            "factual_error"
+          ],
+          "summary": "Python was first released in February 1991 (version 0.9.0), not 1992 as claimed."
+        },
+        {
+          "claim": "The human genome contains approximately 30,000 genes.",
+          "expected": "REFUTED",
+          "verdict": "PARTIAL",
+          "confidence": 0.87,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The ~30,000 gene figure was a valid early estimate from the 2001 Human Genome Project draft but is now outdated; current consensus places protein-coding genes at ~19,000\u201320,500, making the claim historically accurate but scientifically stale without temporal qualification."
+        },
+        {
+          "claim": "Mars is the third planet from the Sun.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "Mars is the fourth planet from the Sun, not the third; Earth occupies the third position."
+        },
+        {
+          "claim": "Amazon was founded by Jeff Bezos in 1995.",
+          "expected": "REFUTED",
+          "verdict": "PARTIAL",
+          "confidence": 0.78,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "Jeff Bezos is correctly identified as Amazon's founder, but the year 1995 refers to the public launch rather than the legal incorporation date of 1994, making the founding year technically imprecise."
+        },
+        {
+          "claim": "The speed of sound in air is approximately 440 meters per second.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The speed of sound in air at standard conditions is approximately 343 m/s, not 440 m/s; the claim contains a ~28% factual error likely caused by confusion with the 440 Hz concert pitch A4."
+        },
+        {
+          "claim": "Mount Kilimanjaro is located in Kenya.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency"
+          ],
+          "summary": "Mount Kilimanjaro is located in Tanzania, not Kenya \u2014 it lies in the Kilimanjaro Region of northeastern Tanzania and is entirely within Tanzanian sovereign territory."
+        },
+        {
+          "claim": "The Euro was introduced as currency on January 1, 2000.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error"
+          ],
+          "summary": "The Euro was not introduced on January 1, 2000; it was introduced as an electronic/accounting currency on January 1, 1999, and physical coins and banknotes entered circulation on January 1, 2002."
+        },
+        {
+          "claim": "Shakespeare was born in 1565.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency"
+          ],
+          "summary": "Shakespeare was born in 1564, not 1565; the claim is contradicted by the well-documented baptismal record of April 26, 1564 at Holy Trinity Church, Stratford-upon-Avon."
+        },
+        {
+          "claim": "The Great Fire of London occurred in 1667.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The Great Fire of London occurred in 1666 (September 2\u20136), not 1667 as claimed \u2014 a clear factual error corroborated by all verifying agents and primary historical sources."
+        },
+        {
+          "claim": "The human body has 208 bones in adulthood.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.93,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The adult human body has 206 bones, not 208 as claimed; this is a clear factual error contradicted by all major anatomical authorities including Gray's Anatomy and USMLE materials."
+        },
+        {
+          "claim": "The chemical symbol for potassium is Po.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The chemical symbol for potassium is 'K' (from Latin 'Kalium'), not 'Po', which is the symbol for Polonium (element 84)."
+        },
+        {
+          "claim": "The Wright Brothers' first flight was at Kitty Hawk in 1902.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "temporal_error",
+            "factual_error"
+          ],
+          "summary": "The Wright Brothers' first powered flight occurred on December 17, 1903, not 1902; the year in the claim is definitively incorrect, and the location 'Kitty Hawk' is a widely accepted but technically imprecise shorthand for Kill Devil Hills."
+        },
+        {
+          "claim": "The Pacific Ocean is the second largest ocean on Earth.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error"
+          ],
+          "summary": "The Pacific Ocean is the largest ocean on Earth, not the second largest; the Atlantic Ocean holds the second position."
+        },
+        {
+          "claim": "DNA was first described by Watson and Crick in 1954.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim contains two clear factual errors: Watson and Crick published their double-helix paper in 1953 (not 1954), and they did not 'first describe' DNA \u2014 Friedrich Miescher isolated and described DNA as early as 1869."
+        },
+        {
+          "claim": "HTTP was invented by Tim Berners-Lee in 1990.",
+          "expected": "REFUTED",
+          "verdict": "PARTIAL",
+          "confidence": 0.75,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "temporal_error",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "Tim Berners-Lee is broadly credited as the primary inventor of HTTP, but the year '1990' is imprecise given that the original proposal dates to 1989, first implementation to ~1990, and the first formal specification (HTTP/0.9) to 1991, while sole-inventor attribution also oversimplifies a collaborative effort."
+        },
+        {
+          "claim": "The Mona Lisa was painted by Leonardo da Vinci in 1507.",
+          "expected": "PARTIAL",
+          "verdict": "PARTIAL",
+          "confidence": 0.82,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "While Leonardo da Vinci as the painter is universally accepted, the specific year '1507' is an unsupported oversimplification; scholarly and institutional consensus places the Mona Lisa's creation across an extended period of approximately 1503\u20131519."
+        }
+      ]
+    },
+    "scope_errors": {
+      "name": "scope_errors",
+      "total": 15,
+      "detection_rate": 1.0,
+      "false_negative_rate": 0.0,
+      "avg_confidence_on_errors": 0.956,
+      "per_item": [
+        {
+          "claim": "All mammals give live birth.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "logical_inconsistency",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is false: monotremes (platypus and echidnas) are egg-laying mammals that directly falsify the universal assertion that all mammals give live birth."
+        },
+        {
+          "claim": "Antibiotics are effective against all infections.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "scope_error",
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that antibiotics are effective against all infections is categorically false, as antibiotics target only bacteria and have no efficacy against viral, fungal, parasitic, or prion-based infections, and are further undermined by antibiotic-resistant bacterial strains."
+        },
+        {
+          "claim": "All planets in our solar system have moons.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "logical_inconsistency"
+          ],
+          "summary": "The claim is false: Mercury and Venus have zero natural satellites, providing two direct counterexamples that disprove the universal assertion that all planets in our solar system have moons."
+        },
+        {
+          "claim": "Water always boils at 100 degrees Celsius.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "scope_error",
+            "factual_error",
+            "factual_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is false because water's boiling point is pressure- and purity-dependent, making the universal quantifier 'always' demonstrably incorrect across multiple well-established counterexamples."
+        },
+        {
+          "claim": "All swans are white.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim 'All swans are white' is definitively refuted by the well-documented existence of black swans (Cygnus atratus) and black-necked swans (Cygnus melancoryphus), both taxonomically unambiguous members of the swan family."
+        },
+        {
+          "claim": "Humans have five senses.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.91,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The unqualified claim that humans have exactly five senses is refuted by modern neuroscience, which recognizes numerous additional sensory modalities including proprioception, vestibular sense, nociception, thermoception, and interoception, each with distinct receptors, neural pathways, and clinical syndromes."
+        },
+        {
+          "claim": "All metals are solid at room temperature.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is definitively false: mercury is a well-established metal that is liquid at room temperature, and additional metals (gallium, cesium, francium) have melting points at or near room temperature, collectively and conclusively falsifying the universal 'all metals' assertion."
+        },
+        {
+          "claim": "Lightning always takes the shortest path to the ground.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error",
+            "factual_error"
+          ],
+          "summary": "Lightning does not always take the shortest path to the ground; it follows a probabilistic, branching path of least resistance determined by conductivity gradients, not geometric distance, and cloud-to-cloud lightning never reaches the ground at all."
+        },
+        {
+          "claim": "Evolution always leads to more complex organisms.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error"
+          ],
+          "summary": "The claim that evolution 'always' leads to more complex organisms is directly and multiply refuted by well-established biological evidence and logical analysis: natural selection is non-directional, numerous textbook examples demonstrate evolutionary simplification and stasis, and the universal quantifier 'always' is falsified by even a single counterexample."
+        },
+        {
+          "claim": "All chemical reactions are reversible.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "scope_error",
+            "logical_inconsistency",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that all chemical reactions are reversible is definitively refuted by multiple well-established counterexamples including combustion, neutralization, precipitation, and explosive reactions, all of which are thermodynamically irreversible under practical conditions."
+        },
+        {
+          "claim": "Every country in the world has a president or a king.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "logical_inconsistency"
+          ],
+          "summary": "The claim is decisively false: numerous countries have heads of state with titles other than president or king, including emperors (Japan), a pope (Vatican City), sultans (Oman, Brunei), emirs (Qatar, Kuwait), grand dukes (Luxembourg), and collective councils (Switzerland), making the universal binary categorization entirely unsupported."
+        },
+        {
+          "claim": "All birds build nests.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that all birds build nests is definitively false, refuted by multiple well-documented counterexamples including brood parasites (cowbirds, cuckoos, honeyguides) and nest-less species (Emperor Penguins) across independent evolutionary lineages."
+        },
+        {
+          "claim": "Diamonds are the hardest substance known to science.",
+          "expected": "PARTIAL",
+          "verdict": "REFUTED",
+          "confidence": 0.91,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "scope_error",
+            "temporal_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that diamonds are the hardest substance known to science is outdated and false as an absolute statement, as multiple materials including wurtzite boron nitride, lonsdaleite, and aggregated diamond nanorods have been scientifically demonstrated to exceed diamond's hardness under various measurement conditions."
+        },
+        {
+          "claim": "The Sun rises in the east and sets in the west everywhere on Earth.",
+          "expected": "PARTIAL",
+          "verdict": "REFUTED",
+          "confidence": 0.95,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "scope_error",
+            "factual_error",
+            "scope_error",
+            "logical_inconsistency"
+          ],
+          "summary": "The claim is factually false as stated: the universal qualifier 'everywhere on Earth' is falsified by polar regions where east/west are undefined or the Sun does not conventionally rise/set, and even at mid-latitudes the Sun only rises due east and sets due west on the equinoxes."
+        },
+        {
+          "claim": "Gravity works the same way everywhere in the universe.",
+          "expected": "PARTIAL",
+          "verdict": "REFUTED",
+          "confidence": 0.82,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference",
+            "source_conflict"
+          ],
+          "summary": "The absolute claim that gravity works the same way everywhere in the universe is refuted by well-established counterexamples, including the breakdown of general relativity at singularities and the Planck scale, as well as unresolved anomalies at cosmological scales."
+        }
+      ]
+    },
+    "planted_confident": {
+      "name": "planted_confident",
+      "total": 15,
+      "detection_rate": 1.0,
+      "false_negative_rate": 0.0,
+      "avg_confidence_on_errors": 0.9653,
+      "per_item": [
+        {
+          "claim": "It is an undisputed scientific fact that humans evolved from chimpanzees.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is refuted on two counts: humans did not evolve 'from' chimpanzees but rather share a common ancestor with them (~6\u20137 million years ago), and this specific formulation is not an 'undisputed scientific fact' but is instead a well-documented and universally corrected misconception in evolutionary biology."
+        },
+        {
+          "claim": "Albert Einstein definitely failed his mathematics exams at ETH Zurich.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.95,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "Einstein did not fail mathematics exams at ETH Zurich; he excelled in mathematics throughout his education, and the only documented exam failure was the 1895 general entrance exam, in which he scored highly on mathematics and physics but struggled with French."
+        },
+        {
+          "claim": "The Great Wall of China is certainly the only man-made structure visible from the Moon.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "The claim is false on every dimension: the Great Wall of China is physically impossible to see from the Moon with the naked eye, no man-made structure has been confirmed visible from the Moon, and the qualifier 'certainly' is maximally misaligned with scientific consensus."
+        },
+        {
+          "claim": "It has been conclusively proven that vitamin C prevents the common cold.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.96,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "unsupported_inference",
+            "logical_inconsistency",
+            "scope_error"
+          ],
+          "summary": "The claim is refuted on two independent grounds: (1) the best available evidence (Cochrane Review meta-analyses covering 11,000+ participants) explicitly found that vitamin C does NOT prevent the common cold in the general population, and (2) the phrase 'conclusively proven' represents an epistemically incoherent standard that empirical medical science cannot and does not meet."
+        },
+        {
+          "claim": "Thomas Edison unquestionably invented the light bulb single-handedly.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that Edison 'unquestionably' invented the light bulb 'single-handedly' is refuted on every component term by documented historical, legal, and institutional evidence, including Joseph Swan's prior UK patent, the forced Ediswan merger, prior work by Davy and de la Rue, and Edison's own collaborative Menlo Park team structure."
+        },
+        {
+          "claim": "Scientists have definitively confirmed that we only use 10% of our brains.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.98,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is a well-documented myth; all four agents independently confirm that scientists have definitively established the opposite \u2014 that the '10% of the brain' figure is false, contradicted by neuroimaging, metabolic, evolutionary, and clinical evidence."
+        },
+        {
+          "claim": "It is absolutely certain that Napoleon Bonaparte was extremely short for his time.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.95,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "The claim is refuted on two grounds: Napoleon was not extremely short for his time (he stood ~5'6\"\u20135'7\", average or above average for French men of his era), and the qualifier 'absolutely certain' is wholly unwarranted given that the underlying premise is a well-documented historical myth."
+        },
+        {
+          "claim": "Research has conclusively shown that sugar is the primary cause of hyperactivity in children.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim inverts scientific consensus: research has conclusively shown that sugar does NOT cause hyperactivity in children, with the perceived link attributed to expectation bias rather than any physiological effect."
+        },
+        {
+          "claim": "Columbus was undeniably the first person to discover that the Earth is round.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.99,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "The claim is false on every dimension: knowledge of Earth's sphericity long predates Columbus by over 2,000 years (established by Pythagoras, Aristotle, and Eratosthenes among others), Columbus's voyage presupposed rather than discovered a spherical Earth, and the qualifier 'undeniably' is self-refuting given universal scholarly consensus to the contrary."
+        },
+        {
+          "claim": "It is a well-established fact that the Sahara Desert has always been a desert.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "temporal_error",
+            "scope_error",
+            "logical_inconsistency",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that the Sahara has always been a desert is directly and robustly contradicted by well-established scientific consensus, including the documented 'Green Sahara' African Humid Period (~11,000\u20135,000 BP), Milankovitch-driven climatic cycles, and geological evidence of ancient marine conditions predating any desert phase."
+        },
+        {
+          "claim": "Galileo was without question the inventor of the telescope.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is refuted on multiple grounds: Hans Lippershey filed a patent for the telescope in 1608 \u2014 a year before Galileo built his version \u2014 and the historical consensus clearly credits Galileo as an improver and astronomical pioneer, not the original inventor."
+        },
+        {
+          "claim": "It is scientifically proven beyond doubt that cracking your knuckles causes arthritis.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "unsupported_inference",
+            "scope_error"
+          ],
+          "summary": "The claim is refuted on multiple independent grounds: scientific studies directly contradict it (finding no causal link between knuckle cracking and arthritis), no biological mechanism has been established, and the phrase 'scientifically proven beyond doubt' is internally inconsistent with scientific epistemology."
+        },
+        {
+          "claim": "It has been established with certainty that goldfish have a three-second memory.",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim that goldfish have a three-second memory established with certainty is a well-documented myth contradicted by scientific research showing goldfish can retain learned behaviors for months, and no peer-reviewed study has ever established the three-second figure."
+        },
+        {
+          "claim": "Historians unanimously agree that Marie Antoinette said 'Let them eat cake.'",
+          "expected": "REFUTED",
+          "verdict": "REFUTED",
+          "confidence": 0.97,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is doubly false: historians do not unanimously agree Marie Antoinette said 'Let them eat cake' \u2014 in fact, the dominant scholarly consensus is the opposite, classifying the attribution as apocryphal and misattributed, with the phrase traced to Rousseau's 'Confessions' written when she was approximately 9\u201310 years old and still in Austria."
+        },
+        {
+          "claim": "The United States was definitively founded in 1776 as a democracy.",
+          "expected": "PARTIAL",
+          "verdict": "REFUTED",
+          "confidence": 0.89,
+          "detected": true,
+          "false_negative": false,
+          "failure_modes": [
+            "factual_error",
+            "factual_error",
+            "logical_inconsistency",
+            "scope_error",
+            "unsupported_inference"
+          ],
+          "summary": "The claim is refuted on multiple independent grounds: '1776' is not a definitively singular founding date (the Constitution was ratified 1788\u20131789), 'definitively' implies a nonexistent scholarly consensus, and the U.S. was explicitly designed as a constitutional republic\u2014not a democracy\u2014with anti-majoritarian features and voting restricted to a small minority of residents."
+        }
+      ]
+    }
+  }
+}
