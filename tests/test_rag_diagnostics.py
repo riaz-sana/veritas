@@ -59,7 +59,7 @@ def test_rag_diagnostic_result_report():
     )
     report = result.report()
     assert "generation_contradiction" in report.lower() or "Generation" in report
-    assert "ISSUE" in report  # generation_fidelity is 0.1
+    assert "PROBLEM" in report  # generation_fidelity is 0.1
 
 
 @pytest.mark.asyncio
@@ -67,20 +67,26 @@ async def test_diagnose_rag_runs(monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     from unittest.mock import AsyncMock, patch
 
-    mock_response = json.dumps({
-        "retrieval_relevance": 0.9,
-        "generation_fidelity": 0.2,
-        "answer_completeness": 0.8,
-        "knowledge_coverage": 1.0,
-        "diagnosis": "generation_hallucination",
-        "root_cause": "Answer adds facts not in documents",
-        "fix_suggestion": "Constrain output to retrieved context",
-        "retrieval_analysis": {"relevant_docs": 2, "total_docs": 2},
-        "generation_analysis": {"fabricated_claims": ["90-day refund"]},
-    })
+    # Multi-agent: 3 auditor responses + 1 synthesiser response
+    call_count = [0]
+    responses = [
+        # Retrieval auditor
+        json.dumps({"relevance_score": 0.9, "relevant_doc_indices": [0], "irrelevant_doc_indices": [], "missing_topics": [], "could_answer_from_docs": True, "reasoning": "Docs are relevant"}),
+        # Generation auditor
+        json.dumps({"fidelity_score": 0.2, "claim_analysis": [{"claim": "90-day refund", "grounded": False, "source_doc_index": None, "source_quote": "", "issue_type": "fabrication", "issue_detail": "Docs say 30 days not 90"}], "fabricated_claims": ["90-day refund"], "contradicted_claims": [], "reasoning": "LLM fabricated"}),
+        # Coverage auditor
+        json.dumps({"knowledge_coverage_score": 1.0, "answer_completeness_score": 0.8, "query_aspects": ["refund policy"], "covered_aspects": ["refund policy"], "uncovered_aspects": [], "answered_aspects": ["refund policy"], "missed_aspects": [], "reasoning": "Docs cover it"}),
+        # Synthesiser
+        json.dumps({"diagnosis": "generation_hallucination", "root_cause": "Answer adds facts not in documents", "fix_suggestion": "Constrain output", "confidence": 0.9, "stage_scores": {"retrieval_relevance": 0.9, "generation_fidelity": 0.2, "answer_completeness": 0.8, "knowledge_coverage": 1.0}}),
+    ]
+
+    async def mock_generate(prompt, system=""):
+        idx = min(call_count[0], len(responses) - 1)
+        call_count[0] += 1
+        return responses[idx]
 
     with patch("veritas.diagnostics.rag.ClaudeProvider") as MockProvider:
-        MockProvider.return_value.generate = AsyncMock(return_value=mock_response)
+        MockProvider.return_value.generate = AsyncMock(side_effect=mock_generate)
         result = await diagnose_rag(
             query="What is our refund policy?",
             retrieved_docs=["Refund window is 30 days..."],
@@ -90,4 +96,5 @@ async def test_diagnose_rag_runs(monkeypatch):
     assert result.diagnosis == RAGDiagnosis.GENERATION_HALLUCINATION
     assert result.retrieval_relevance == 0.9
     assert result.generation_fidelity == 0.2
-    assert "90" in result.root_cause or "facts" in result.root_cause
+    assert len(result.claim_mappings) >= 1
+    assert result.claim_mappings[0].grounded is False

@@ -1,25 +1,45 @@
-"""Pre-Action Verification for Agentic AI.
+"""Pre-Action Verification for Agentic AI — multi-agent architecture.
 
 Verifies that an agent's planned action is correct BEFORE it executes.
-This is the gap: agents take actions (API calls, database writes, emails)
-based on reasoning that might be wrong. Nobody checks before execution.
+Uses 4 specialized verification agents in parallel isolation:
+
+                    action + params + reasoning
+                              │
+               ┌──────────────┼──────────────┐
+               │              │              │
+               ▼              ▼              ▼
+    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+    │  Reasoning   │ │  Parameter   │ │    Risk      │
+    │  Verifier    │ │  Verifier    │ │  Assessor    │
+    │              │ │              │ │              │
+    │ Is the logic │ │ Are params   │ │ What could   │
+    │ behind this  │ │ correct for  │ │ go wrong?    │
+    │ action sound?│ │ the goal?    │ │ Irreversible?│
+    └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
+           │                │                │
+           │    ┌───────────────────┐        │
+           │    │  Scope Verifier   │        │
+           │    │                   │        │
+           │    │ Does the action   │        │
+           │    │ match the stated  │        │
+           │    │ goal? Too much?   │        │
+           │    │ Too little?       │        │
+           │    └────────┬──────────┘        │
+           │             │                   │
+           └─────────────┼───────────────────┘
+                         ▼
+              ┌──────────────────┐
+              │  Action          │
+              │  Synthesiser     │
+              │                  │
+              │  Combines into   │
+              │  verdict + risks │
+              └──────────────────┘
 
 Three integration patterns:
-
-1. Decorator — wrap action functions:
-    @before_action
-    async def send_email(to, subject, body):
-        ...
-
-2. Explicit gate — verify before acting:
-    decision = await verify_action(action="send_email", reasoning="...", context="...")
-    if decision.approved:
-        send_email(...)
-
-3. Pipeline step — insert into agentic workflow:
-    plan = agent.plan(task)
-    verified_plan = await verify_plan(plan)
-    agent.execute(verified_plan)
+1. @before_action decorator — automatic verification
+2. verify_action() — explicit gate before execution
+3. verify_plan() — verify multi-step plan before any step runs
 """
 
 from __future__ import annotations
@@ -36,20 +56,21 @@ from typing import Any, Callable
 from veritas.core.config import Config
 from veritas.core.result import AgentFinding, FailureMode, FailureModeType
 from veritas.providers.claude import ClaudeProvider
+from veritas.providers.base import LLMProvider
 
 
 class ActionVerdict(str, Enum):
     """Verdict for a planned action."""
-    APPROVED = "approved"           # Action is safe and correct
-    APPROVED_WITH_WARNINGS = "approved_with_warnings"  # Proceed but note concerns
-    BLOCKED = "blocked"             # Do NOT execute — reasoning is flawed
-    NEEDS_HUMAN_REVIEW = "needs_human_review"  # Uncertain — escalate
+    APPROVED = "approved"
+    APPROVED_WITH_WARNINGS = "approved_with_warnings"
+    BLOCKED = "blocked"
+    NEEDS_HUMAN_REVIEW = "needs_human_review"
 
 
 @dataclass
 class ActionRisk:
     """A specific risk identified in a planned action."""
-    category: str   # "data_loss", "incorrect_target", "logic_error", "scope_exceeded", "missing_validation", "irreversible"
+    category: str   # "data_loss", "incorrect_target", "logic_error", "scope_exceeded", "missing_validation", "irreversible", "security", "compliance"
     severity: str   # "critical", "high", "medium", "low"
     description: str
     mitigation: str
@@ -57,7 +78,7 @@ class ActionRisk:
 
 @dataclass
 class ActionVerificationResult:
-    """Result of pre-action verification."""
+    """Result of multi-agent pre-action verification."""
 
     verdict: ActionVerdict
     confidence: float
@@ -69,7 +90,9 @@ class ActionVerificationResult:
     parameters: dict
     agent_reasoning: str
 
-    # Metadata
+    # Evidence from each verifier
+    verifier_findings: dict = field(default_factory=dict)
+
     duration_ms: int = 0
     metadata: dict = field(default_factory=dict)
 
@@ -96,6 +119,7 @@ class ActionVerificationResult:
             "action": self.action,
             "parameters": self.parameters,
             "approved": self.approved,
+            "verifier_findings": self.verifier_findings,
             "duration_ms": self.duration_ms,
         }
 
@@ -116,92 +140,184 @@ class ActionVerificationResult:
                 lines.append(f"- **Issue:** {r.description}")
                 lines.append(f"- **Mitigation:** {r.mitigation}")
                 lines.append("")
-        lines.append("## Parameters Verified")
-        lines.append("")
-        for k, v in self.parameters.items():
-            lines.append(f"- **{k}:** {v}")
+        if self.verifier_findings:
+            lines.append("## Verifier Details")
+            lines.append("")
+            for name, finding in self.verifier_findings.items():
+                lines.append(f"### {name}")
+                if isinstance(finding, dict):
+                    lines.append(f"- Verdict: {finding.get('verdict', 'unknown')}")
+                    if finding.get('concerns'):
+                        for c in finding['concerns']:
+                            lines.append(f"  - {c}")
+                lines.append("")
         return "\n".join(lines)
 
 
-_ACTION_VERIFY_SYSTEM_PROMPT = """You are a pre-action verification agent. An AI agent is about to execute an action. Your job is to verify the action is correct and safe BEFORE it executes.
+# ── Verifier Prompts ─────────────────────────────────────────────────
 
-You receive:
-- The action to be taken (function name, API call, etc.)
-- The parameters/arguments
-- The agent's reasoning for why it chose this action
-- Optional: the original task/goal
+_REASONING_VERIFIER_PROMPT = """You are a Reasoning Verifier. You ONLY analyze whether the LOGIC behind a planned action is sound. You do NOT assess parameters or risks — other agents handle those.
 
-You must respond with ONLY a JSON object:
+Given an action, the agent's reasoning for choosing it, and the original goal, determine:
+1. Does the reasoning logically lead to this action?
+2. Are there logical fallacies in the reasoning?
+3. Are there unstated assumptions that might be wrong?
+4. Is the reasoning internally consistent?
+
+Respond with ONLY JSON:
+{
+  "verdict": "sound" | "flawed" | "uncertain",
+  "confidence": <float 0.0-1.0>,
+  "concerns": ["<specific logical issues found>"],
+  "unstated_assumptions": ["<assumptions the reasoning relies on but doesn't state>"],
+  "reasoning": "<your step-by-step analysis>"
+}"""
+
+_PARAMETER_VERIFIER_PROMPT = """You are a Parameter Verifier. You ONLY analyze whether the action's parameters are correct for the stated goal. You do NOT assess the reasoning or risks — other agents handle those.
+
+Given an action, its parameters, and the original goal, determine:
+1. Do the parameter values match what the goal requires?
+2. Are any required parameters missing?
+3. Are any parameter values obviously wrong (wrong type, out of range, wrong entity)?
+4. Do the parameters contain anything that contradicts the stated goal?
+
+Respond with ONLY JSON:
+{
+  "verdict": "correct" | "incorrect" | "uncertain",
+  "confidence": <float 0.0-1.0>,
+  "param_analysis": [
+    {
+      "param": "<parameter name>",
+      "value": "<parameter value>",
+      "status": "ok" | "wrong" | "suspicious" | "missing",
+      "issue": "<what's wrong, if anything>"
+    }
+  ],
+  "missing_params": ["<parameters that should be present but aren't>"],
+  "reasoning": "<your step-by-step analysis>"
+}"""
+
+_RISK_ASSESSOR_PROMPT = """You are a Risk Assessor. You ONLY analyze what could go wrong if this action executes. You do NOT assess whether the action is logically correct — other agents handle that.
+
+Given an action and its parameters, identify:
+1. Is this action irreversible? (deletes, sends, payments, publications)
+2. Could this action cause data loss or corruption?
+3. Are there security concerns? (injection, unauthorized access, data exposure)
+4. Are there compliance concerns? (PII, financial regulations, rate limits)
+5. What's the blast radius if something goes wrong?
+
+Respond with ONLY JSON:
+{
+  "risk_level": "none" | "low" | "medium" | "high" | "critical",
+  "is_irreversible": <true/false>,
+  "risks": [
+    {
+      "category": "data_loss" | "incorrect_target" | "irreversible" | "security" | "compliance" | "rate_limit" | "cascade_failure",
+      "severity": "critical" | "high" | "medium" | "low",
+      "description": "<specific risk>",
+      "mitigation": "<how to reduce this risk>",
+      "likelihood": "certain" | "likely" | "possible" | "unlikely"
+    }
+  ],
+  "requires_confirmation": <true if human should confirm before execution>,
+  "reasoning": "<your risk analysis>"
+}"""
+
+_SCOPE_VERIFIER_PROMPT = """You are a Scope Verifier. You ONLY analyze whether the action matches the stated goal — not doing too much, not doing too little. You do NOT assess correctness or risk — other agents handle those.
+
+Given an action, its parameters, and the original goal, determine:
+1. Does this action actually achieve the goal?
+2. Does the action do MORE than what was asked? (scope creep)
+3. Does the action do LESS than what was needed? (incomplete)
+4. Is there a simpler action that would achieve the same goal?
+
+Respond with ONLY JSON:
+{
+  "verdict": "matches_goal" | "exceeds_goal" | "insufficient" | "wrong_goal",
+  "confidence": <float 0.0-1.0>,
+  "scope_analysis": {
+    "goal_requirements": ["<what the goal asks for>"],
+    "action_effects": ["<what the action will actually do>"],
+    "excess": ["<things the action does that weren't asked for>"],
+    "gaps": ["<things the goal needs that the action doesn't do>"]
+  },
+  "simpler_alternative": "<simpler way to achieve the goal, or null>",
+  "reasoning": "<your analysis>"
+}"""
+
+_ACTION_SYNTHESISER_PROMPT = """You are an Action Synthesiser. You receive independent analyses from four verification agents who each examined a different aspect of a planned action. They did NOT see each other's work.
+
+Combine their findings into a final verdict:
+- Reasoning Verifier: analyzed if the logic is sound
+- Parameter Verifier: analyzed if parameters are correct
+- Risk Assessor: identified what could go wrong
+- Scope Verifier: analyzed if action matches the goal
+
+Verdict rules:
+- "approved": All verifiers report positive. No critical/high risks. Logic sound, params correct, scope matches.
+- "approved_with_warnings": Generally positive but has medium risks or minor concerns. Safe to proceed with awareness.
+- "blocked": ANY critical issue — flawed reasoning, wrong parameters, critical risk, or wrong goal. Do NOT execute.
+- "needs_human_review": Verifiers disagree or are uncertain. Human judgment needed.
+
+Respond with ONLY JSON:
 {
   "verdict": "approved" | "approved_with_warnings" | "blocked" | "needs_human_review",
   "confidence": <float 0.0-1.0>,
-  "reasoning": "<why you reached this verdict>",
-  "risks": [
-    {
-      "category": "data_loss" | "incorrect_target" | "logic_error" | "scope_exceeded" | "missing_validation" | "irreversible" | "security" | "compliance",
-      "severity": "critical" | "high" | "medium" | "low",
-      "description": "<specific risk>",
-      "mitigation": "<how to address it>"
-    }
-  ]
-}
-
-Verdict rules:
-- "approved": Action is correct, parameters are valid, reasoning is sound
-- "approved_with_warnings": Action is probably correct but has minor concerns
-- "blocked": Action should NOT execute — reasoning is flawed, parameters are wrong, or risks are too high
-- "needs_human_review": Cannot determine correctness — escalate to human
-
-Check for:
-1. Do the parameters match what the reasoning describes?
-2. Is the action appropriate for the stated goal?
-3. Are there irreversible consequences (deletes, sends, payments)?
-4. Are there edge cases the agent missed?
-5. Does the action scope match the task scope (not doing too much or too little)?
-6. Are required validations present (auth, permissions, rate limits)?
-7. Could this action cause data loss or corruption?
-8. Are there security or compliance concerns?"""
+  "reasoning": "<synthesis of all verifier findings>",
+  "risks": [<consolidated list of risks from risk assessor, only medium+ severity>]
+}"""
 
 
-_PLAN_VERIFY_SYSTEM_PROMPT = """You are a plan verification agent. An AI agent has created a multi-step plan. Your job is to verify the ENTIRE PLAN is correct before any step executes.
+_PLAN_VERIFIER_PROMPT = """You are a Plan Verifier. An AI agent has created a multi-step plan. Analyze the ENTIRE plan for correctness, ordering, completeness, and risks.
 
-You receive:
-- The original task/goal
-- The planned steps (in order)
-- Optional: context and constraints
+Check:
+1. Are steps in the right order? (dependencies respected)
+2. Are any steps missing? (validation, error handling, cleanup, rollback)
+3. Are any steps unnecessary? (scope creep)
+4. Could any step fail and leave the system in a bad state?
+5. Are irreversible steps placed AFTER confirmation/validation steps?
+6. Does the plan actually achieve the stated goal?
+7. What's the blast radius if step N fails midway?
 
-You must respond with ONLY a JSON object:
+Respond with ONLY JSON:
 {
   "verdict": "approved" | "approved_with_warnings" | "blocked" | "needs_human_review",
   "confidence": <float 0.0-1.0>,
   "reasoning": "<overall assessment>",
   "step_analysis": [
     {
-      "step": <step number>,
-      "action": "<step description>",
+      "step": <number>,
+      "action": "<description>",
       "verdict": "ok" | "warning" | "blocked",
-      "concern": "<issue if any>"
+      "concern": "<issue if any>",
+      "depends_on": [<step numbers this depends on>],
+      "reversible": <true/false>
     }
   ],
   "risks": [
     {
-      "category": "data_loss" | "incorrect_target" | "logic_error" | "scope_exceeded" | "missing_validation" | "irreversible" | "ordering" | "dependency",
+      "category": "ordering" | "missing_step" | "scope_exceeded" | "irreversible" | "cascade_failure" | "incomplete_cleanup",
       "severity": "critical" | "high" | "medium" | "low",
       "description": "<specific risk>",
-      "mitigation": "<how to address it>"
+      "mitigation": "<how to fix>"
     }
   ],
-  "missing_steps": ["<any steps that should be in the plan but aren't>"],
-  "unnecessary_steps": ["<any steps that shouldn't be in the plan>"]
-}
+  "missing_steps": ["<steps that should be in the plan but aren't>"],
+  "unnecessary_steps": ["<steps that shouldn't be in the plan>"],
+  "failure_scenario": "<what happens if step N fails midway through execution>"
+}"""
 
-Check for:
-1. Are steps in the right order? (dependencies respected)
-2. Are any steps missing? (validation, error handling, cleanup)
-3. Are any steps unnecessary? (scope creep)
-4. Could any step fail and leave the system in a bad state?
-5. Are irreversible steps placed after confirmation/validation steps?
-6. Does the plan actually achieve the stated goal?"""
+
+# ── Engine ───────────────────────────────────────────────────────────
+
+def _parse_json(text: str) -> dict:
+    try:
+        cleaned = text.strip()
+        if cleaned.startswith("```"):
+            cleaned = cleaned.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+        return json.loads(cleaned)
+    except (json.JSONDecodeError, ValueError, IndexError):
+        return {"error": f"Failed to parse: {text[:200]}"}
 
 
 async def verify_action(
@@ -212,78 +328,112 @@ async def verify_action(
     context: str = "",
     config: Config | None = None,
 ) -> ActionVerificationResult:
-    """Verify a planned action before execution.
+    """Verify a planned action using 4 agents in parallel isolation.
 
-    Args:
-        action: Name of the action (function name, API endpoint, etc.)
-        parameters: Action parameters/arguments
-        reasoning: The agent's reasoning for choosing this action
-        goal: The original task/goal
-        context: Additional context
-        config: Veritas config
+    Each verifier independently analyzes a different aspect:
+    - Reasoning Verifier: is the logic sound?
+    - Parameter Verifier: are params correct?
+    - Risk Assessor: what could go wrong?
+    - Scope Verifier: does the action match the goal?
     """
     if config is None:
         config = Config()
     config.validate()
 
-    
-
     start = time.monotonic()
     provider = ClaudeProvider(model=config.model, api_key=config.anthropic_api_key)
 
     params = parameters or {}
-    prompt_parts = [
-        f"## Action\n{action}",
-        f"\n## Parameters\n```json\n{json.dumps(params, indent=2, default=str)}\n```",
-    ]
-    if reasoning:
-        prompt_parts.append(f"\n## Agent's Reasoning\n{reasoning}")
-    if goal:
-        prompt_parts.append(f"\n## Original Goal\n{goal}")
-    if context:
-        prompt_parts.append(f"\n## Context\n{context}")
+    params_json = json.dumps(params, indent=2, default=str)
 
-    prompt = "\n".join(prompt_parts)
-    response = await provider.generate(prompt, system=_ACTION_VERIFY_SYSTEM_PROMPT)
+    # Build prompts for each verifier — different context for isolation
+    reasoning_prompt = (
+        f"## Action: {action}\n"
+        f"## Agent's Reasoning: {reasoning}\n"
+        f"## Goal: {goal}\n"
+        + (f"## Context: {context}" if context else "")
+    )
+
+    param_prompt = (
+        f"## Action: {action}\n"
+        f"## Parameters:\n```json\n{params_json}\n```\n"
+        f"## Goal: {goal}"
+    )
+
+    risk_prompt = (
+        f"## Action: {action}\n"
+        f"## Parameters:\n```json\n{params_json}\n```\n"
+        + (f"## Context: {context}" if context else "")
+    )
+
+    scope_prompt = (
+        f"## Action: {action}\n"
+        f"## Parameters:\n```json\n{params_json}\n```\n"
+        f"## Goal: {goal}\n"
+        f"## Agent's Reasoning: {reasoning}"
+    )
+
+    # Run all 4 verifiers in parallel (isolated)
+    reasoning_raw, param_raw, risk_raw, scope_raw = await asyncio.gather(
+        provider.generate(reasoning_prompt, system=_REASONING_VERIFIER_PROMPT),
+        provider.generate(param_prompt, system=_PARAMETER_VERIFIER_PROMPT),
+        provider.generate(risk_prompt, system=_RISK_ASSESSOR_PROMPT),
+        provider.generate(scope_prompt, system=_SCOPE_VERIFIER_PROMPT),
+    )
+
+    reasoning_data = _parse_json(reasoning_raw)
+    param_data = _parse_json(param_raw)
+    risk_data = _parse_json(risk_raw)
+    scope_data = _parse_json(scope_raw)
+
+    # Synthesise
+    synth_prompt = (
+        f"## Reasoning Verifier\n```json\n{json.dumps(reasoning_data, indent=2)}\n```\n\n"
+        f"## Parameter Verifier\n```json\n{json.dumps(param_data, indent=2)}\n```\n\n"
+        f"## Risk Assessor\n```json\n{json.dumps(risk_data, indent=2)}\n```\n\n"
+        f"## Scope Verifier\n```json\n{json.dumps(scope_data, indent=2)}\n```"
+    )
+
+    synth_raw = await provider.generate(synth_prompt, system=_ACTION_SYNTHESISER_PROMPT)
+    synth_data = _parse_json(synth_raw)
+
     duration_ms = int((time.monotonic() - start) * 1000)
 
-    try:
-        text = response.strip()
-        if text.startswith("```"):
-            text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-        data = json.loads(text)
-
-        risks = [
-            ActionRisk(
+    # Build risks from synthesiser + risk assessor
+    risks = []
+    for r in synth_data.get("risks", []) + risk_data.get("risks", []):
+        if isinstance(r, dict):
+            risks.append(ActionRisk(
                 category=r.get("category", "logic_error"),
                 severity=r.get("severity", "medium"),
                 description=r.get("description", ""),
                 mitigation=r.get("mitigation", ""),
-            )
-            for r in data.get("risks", [])
-        ]
+            ))
+    # Deduplicate by description
+    seen = set()
+    unique_risks = []
+    for r in risks:
+        if r.description not in seen:
+            seen.add(r.description)
+            unique_risks.append(r)
 
-        return ActionVerificationResult(
-            verdict=ActionVerdict(data.get("verdict", "needs_human_review")),
-            confidence=float(data.get("confidence", 0.0)),
-            reasoning=data.get("reasoning", ""),
-            risks=risks,
-            action=action,
-            parameters=params,
-            agent_reasoning=reasoning,
-            duration_ms=duration_ms,
-        )
-    except (json.JSONDecodeError, ValueError):
-        return ActionVerificationResult(
-            verdict=ActionVerdict.NEEDS_HUMAN_REVIEW,
-            confidence=0.0,
-            reasoning=f"Verification parse error",
-            risks=[],
-            action=action,
-            parameters=params,
-            agent_reasoning=reasoning,
-            duration_ms=duration_ms,
-        )
+    return ActionVerificationResult(
+        verdict=ActionVerdict(synth_data.get("verdict", "needs_human_review")),
+        confidence=float(synth_data.get("confidence", 0.0)),
+        reasoning=synth_data.get("reasoning", ""),
+        risks=unique_risks,
+        action=action,
+        parameters=params,
+        agent_reasoning=reasoning,
+        verifier_findings={
+            "reasoning": reasoning_data,
+            "parameters": param_data,
+            "risk": risk_data,
+            "scope": scope_data,
+            "synthesis": synth_data,
+        },
+        duration_ms=duration_ms,
+    )
 
 
 async def verify_plan(
@@ -292,19 +442,10 @@ async def verify_plan(
     context: str = "",
     config: Config | None = None,
 ) -> ActionVerificationResult:
-    """Verify a multi-step plan before any step executes.
-
-    Args:
-        goal: The original task/goal
-        steps: List of planned steps (strings or dicts with 'action' and 'params')
-        context: Additional context
-        config: Veritas config
-    """
+    """Verify a multi-step plan before any step executes."""
     if config is None:
         config = Config()
     config.validate()
-
-    
 
     start = time.monotonic()
     provider = ClaudeProvider(model=config.model, api_key=config.anthropic_api_key)
@@ -321,51 +462,39 @@ async def verify_plan(
     if context:
         prompt += f"\n\n## Context\n{context}"
 
-    response = await provider.generate(prompt, system=_PLAN_VERIFY_SYSTEM_PROMPT)
+    response = await provider.generate(prompt, system=_PLAN_VERIFIER_PROMPT)
     duration_ms = int((time.monotonic() - start) * 1000)
 
-    try:
-        text = response.strip()
-        if text.startswith("```"):
-            text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-        data = json.loads(text)
+    data = _parse_json(response)
 
-        risks = [
-            ActionRisk(
-                category=r.get("category", "logic_error"),
-                severity=r.get("severity", "medium"),
-                description=r.get("description", ""),
-                mitigation=r.get("mitigation", ""),
-            )
-            for r in data.get("risks", [])
-        ]
+    risks = [
+        ActionRisk(
+            category=r.get("category", "logic_error"),
+            severity=r.get("severity", "medium"),
+            description=r.get("description", ""),
+            mitigation=r.get("mitigation", ""),
+        )
+        for r in data.get("risks", [])
+        if isinstance(r, dict)
+    ]
 
-        return ActionVerificationResult(
-            verdict=ActionVerdict(data.get("verdict", "needs_human_review")),
-            confidence=float(data.get("confidence", 0.0)),
-            reasoning=data.get("reasoning", ""),
-            risks=risks,
-            action="plan_verification",
-            parameters={"goal": goal, "num_steps": len(steps)},
-            agent_reasoning="",
-            duration_ms=duration_ms,
-            metadata={
-                "step_analysis": data.get("step_analysis", []),
-                "missing_steps": data.get("missing_steps", []),
-                "unnecessary_steps": data.get("unnecessary_steps", []),
-            },
-        )
-    except (json.JSONDecodeError, ValueError):
-        return ActionVerificationResult(
-            verdict=ActionVerdict.NEEDS_HUMAN_REVIEW,
-            confidence=0.0,
-            reasoning="Verification parse error",
-            risks=[],
-            action="plan_verification",
-            parameters={"goal": goal, "num_steps": len(steps)},
-            agent_reasoning="",
-            duration_ms=duration_ms,
-        )
+    return ActionVerificationResult(
+        verdict=ActionVerdict(data.get("verdict", "needs_human_review")),
+        confidence=float(data.get("confidence", 0.0)),
+        reasoning=data.get("reasoning", ""),
+        risks=risks,
+        action="plan_verification",
+        parameters={"goal": goal, "num_steps": len(steps)},
+        agent_reasoning="",
+        verifier_findings={"plan_analysis": data},
+        duration_ms=duration_ms,
+        metadata={
+            "step_analysis": data.get("step_analysis", []),
+            "missing_steps": data.get("missing_steps", []),
+            "unnecessary_steps": data.get("unnecessary_steps", []),
+            "failure_scenario": data.get("failure_scenario", ""),
+        },
+    )
 
 
 def before_action(
@@ -376,7 +505,7 @@ def before_action(
     block_on_failure: bool = True,
     config: Config | None = None,
 ):
-    """Decorator that verifies an action before execution.
+    """Decorator that verifies an action using multi-agent verification before execution.
 
     Usage:
         @before_action
@@ -386,27 +515,18 @@ def before_action(
         @before_action(goal="Process refund", block_on_failure=True)
         async def process_refund(order_id: str, amount: float):
             ...
-
-    When the decorated function is called:
-    1. Veritas verifies the action + parameters are correct
-    2. If APPROVED: function executes normally
-    3. If BLOCKED: raises ActionBlockedError (if block_on_failure=True) or returns verification result
-    4. If NEEDS_HUMAN_REVIEW: raises ActionNeedsReviewError
     """
     def decorator(fn: Callable) -> Callable:
         @functools.wraps(fn)
         async def wrapper(*args, **kwargs):
-            # Build parameters dict from function signature
             sig = inspect.signature(fn)
             bound = sig.bind(*args, **kwargs)
             bound.apply_defaults()
             params = dict(bound.arguments)
 
-            # Get reasoning from kwargs if provided
             reasoning = params.pop("_reasoning", "")
             action_goal = params.pop("_goal", goal)
 
-            # Verify the action
             result = await verify_action(
                 action=fn.__name__,
                 parameters=params,
@@ -428,15 +548,10 @@ def before_action(
                     verification_result=result,
                 )
 
-            # Execute the action
             if inspect.iscoroutinefunction(fn):
-                action_result = await fn(*args, **kwargs)
-            else:
-                action_result = fn(*args, **kwargs)
+                return await fn(*args, **kwargs)
+            return fn(*args, **kwargs)
 
-            return action_result
-
-        # Attach verification result to the wrapper for inspection
         wrapper._veritas_enabled = True
         return wrapper
 

@@ -1,39 +1,53 @@
-"""RAG Diagnostic Engine — root-cause diagnosis of RAG pipeline failures.
+"""RAG Diagnostic Engine — multi-agent root-cause diagnosis of RAG failures.
 
-Existing tools say "your answer is wrong." Veritas tells you WHERE it failed and WHY.
+Unlike existing tools (RAGAS, DeepEval) that give you a faithfulness SCORE,
+this engine uses 4 specialized agents in isolation to diagnose the ROOT CAUSE
+of a RAG pipeline failure — separating retrieval problems from generation
+problems from knowledge gaps.
 
-Separates 5 failure modes:
-- RETRIEVAL_MISS: relevant documents exist but weren't retrieved
-- RETRIEVAL_NOISE: irrelevant documents were retrieved, misleading the LLM
-- GENERATION_HALLUCINATION: LLM fabricated facts not in retrieved documents
-- GENERATION_CONTRADICTION: LLM contradicted facts IN the retrieved documents
-- KNOWLEDGE_GAP: the answer isn't in the knowledge base at all
+Architecture:
+                     query + docs + answer
+                              │
+               ┌──────────────┼──────────────┐
+               │              │              │
+               ▼              ▼              ▼
+    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+    │  Retrieval   │ │  Generation  │ │  Coverage    │
+    │  Auditor     │ │  Auditor     │ │  Auditor     │
+    │              │ │              │ │              │
+    │ Are the docs │ │ Is the answer│ │ Could the    │
+    │ relevant to  │ │ faithful to  │ │ answer be    │
+    │ the query?   │ │ the docs?    │ │ derived from │
+    │              │ │              │ │ the docs?    │
+    └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
+           │                │                │
+           └────────────────┼────────────────┘
+                            ▼
+                 ┌──────────────────┐
+                 │   Diagnostic     │
+                 │   Synthesiser    │
+                 │                  │
+                 │ Combines stage   │
+                 │ analyses into    │
+                 │ root cause +     │
+                 │ fix suggestion   │
+                 └──────────────────┘
 
-Usage:
-    from veritas.diagnostics.rag import diagnose_rag
-
-    result = await diagnose_rag(
-        query="What is our refund policy?",
-        retrieved_docs=["Policy doc 1...", "Policy doc 2..."],
-        generated_answer="Our refund window is 90 days...",
-    )
-
-    result.diagnosis        # RAGDiagnosis.GENERATION_HALLUCINATION
-    result.root_cause       # "Answer states '90 days' but docs say '30 days' (policy.md)"
-    result.fix_suggestion   # "Generation is unfaithful. Consider constraining output..."
+Each agent runs in isolation — the Retrieval Auditor doesn't know what the
+Generation Auditor found, preventing confirmation bias in the diagnosis.
 """
 
 from __future__ import annotations
 
+import asyncio
 import json
 import time
 from dataclasses import dataclass, field
 from enum import Enum
 
 from veritas.core.config import Config
-from veritas.core.result import AgentFinding, FailureMode, Verdict, VerificationResult
-from veritas.providers.base import LLMProvider
 from veritas.providers.claude import ClaudeProvider
+from veritas.providers.base import LLMProvider
 
 
 class RAGDiagnosis(str, Enum):
@@ -48,6 +62,16 @@ class RAGDiagnosis(str, Enum):
 
 
 @dataclass
+class ClaimMapping:
+    """Maps a single claim in the answer to its source (or lack thereof)."""
+    claim: str
+    grounded: bool
+    source_doc_index: int | None = None  # Which doc supports this, if any
+    source_quote: str = ""               # Exact quote from doc
+    issue: str = ""                      # What's wrong, if not grounded
+
+
+@dataclass
 class RAGDiagnosticResult:
     """Complete diagnostic result for a RAG pipeline output."""
 
@@ -55,18 +79,21 @@ class RAGDiagnosticResult:
     root_cause: str
     fix_suggestion: str
 
-    # Scores for each pipeline stage (0.0 = bad, 1.0 = good)
-    retrieval_relevance: float    # Are retrieved docs relevant to the query?
-    generation_fidelity: float    # Does the answer stick to retrieved docs?
-    answer_completeness: float    # Does the answer fully address the query?
-    knowledge_coverage: float     # Is the answer in the knowledge base?
+    # Per-stage scores (0.0 = bad, 1.0 = good)
+    retrieval_relevance: float
+    generation_fidelity: float
+    answer_completeness: float
+    knowledge_coverage: float
 
-    # Evidence
-    verification_result: VerificationResult | None = None
+    # Detailed evidence from each auditor
+    claim_mappings: list[ClaimMapping] = field(default_factory=list)
     retrieval_analysis: dict = field(default_factory=dict)
     generation_analysis: dict = field(default_factory=dict)
+    coverage_analysis: dict = field(default_factory=dict)
 
-    # Metadata
+    # Raw auditor findings
+    auditor_findings: dict = field(default_factory=dict)
+
     duration_ms: int = 0
 
     def __str__(self) -> str:
@@ -88,8 +115,14 @@ class RAGDiagnosticResult:
             "generation_fidelity": round(self.generation_fidelity, 3),
             "answer_completeness": round(self.answer_completeness, 3),
             "knowledge_coverage": round(self.knowledge_coverage, 3),
+            "claim_mappings": [
+                {"claim": cm.claim, "grounded": cm.grounded, "source_doc": cm.source_doc_index,
+                 "source_quote": cm.source_quote, "issue": cm.issue}
+                for cm in self.claim_mappings
+            ],
             "retrieval_analysis": self.retrieval_analysis,
             "generation_analysis": self.generation_analysis,
+            "coverage_analysis": self.coverage_analysis,
             "duration_ms": self.duration_ms,
         }
 
@@ -99,77 +132,139 @@ class RAGDiagnosticResult:
             "",
             f"**Diagnosis:** {self.diagnosis.value}",
             f"**Root Cause:** {self.root_cause}",
-            f"**Fix Suggestion:** {self.fix_suggestion}",
+            f"**Fix:** {self.fix_suggestion}",
             "",
             "## Pipeline Stage Scores",
             "",
-            f"| Stage | Score | Status |",
-            f"|-------|-------|--------|",
-            f"| Retrieval Relevance | {self.retrieval_relevance:.0%} | {'OK' if self.retrieval_relevance > 0.7 else 'ISSUE'} |",
-            f"| Generation Fidelity | {self.generation_fidelity:.0%} | {'OK' if self.generation_fidelity > 0.7 else 'ISSUE'} |",
-            f"| Answer Completeness | {self.answer_completeness:.0%} | {'OK' if self.answer_completeness > 0.7 else 'ISSUE'} |",
-            f"| Knowledge Coverage | {self.knowledge_coverage:.0%} | {'OK' if self.knowledge_coverage > 0.7 else 'ISSUE'} |",
+            "| Stage | Score | Status |",
+            "|-------|-------|--------|",
+            f"| Retrieval Relevance | {self.retrieval_relevance:.0%} | {'OK' if self.retrieval_relevance > 0.7 else 'PROBLEM'} |",
+            f"| Generation Fidelity | {self.generation_fidelity:.0%} | {'OK' if self.generation_fidelity > 0.7 else 'PROBLEM'} |",
+            f"| Answer Completeness | {self.answer_completeness:.0%} | {'OK' if self.answer_completeness > 0.7 else 'PROBLEM'} |",
+            f"| Knowledge Coverage  | {self.knowledge_coverage:.0%} | {'OK' if self.knowledge_coverage > 0.7 else 'PROBLEM'} |",
             "",
         ]
-        if self.retrieval_analysis:
-            lines.append("## Retrieval Analysis")
+        if self.claim_mappings:
+            lines.append("## Claim-Level Analysis")
             lines.append("")
-            for key, val in self.retrieval_analysis.items():
-                lines.append(f"- **{key}:** {val}")
-            lines.append("")
-        if self.generation_analysis:
-            lines.append("## Generation Analysis")
-            lines.append("")
-            for key, val in self.generation_analysis.items():
-                lines.append(f"- **{key}:** {val}")
+            for cm in self.claim_mappings:
+                status = "GROUNDED" if cm.grounded else "UNGROUNDED"
+                lines.append(f"- [{status}] \"{cm.claim}\"")
+                if cm.grounded and cm.source_quote:
+                    lines.append(f"  Source (doc {cm.source_doc_index}): \"{cm.source_quote}\"")
+                elif not cm.grounded and cm.issue:
+                    lines.append(f"  Issue: {cm.issue}")
             lines.append("")
         return "\n".join(lines)
 
 
-_DIAGNOSE_SYSTEM_PROMPT = """You are a RAG pipeline diagnostic engine. You analyze WHY a RAG system produced a given answer.
+# ── Auditor Prompts ──────────────────────────────────────────────────
 
-You receive:
-- The user's query
-- The documents that were retrieved
-- The generated answer
+_RETRIEVAL_AUDITOR_PROMPT = """You are a Retrieval Auditor. You ONLY analyze whether the retrieved documents are relevant to the user's query. You know NOTHING about the generated answer — you haven't seen it.
 
-Your job is to determine the ROOT CAUSE of any issues by analyzing each pipeline stage independently.
+Given a query and retrieved documents, analyze:
+1. How many documents are relevant to the query?
+2. Are there obvious topics the query asks about that NO document covers?
+3. Are any documents completely irrelevant (noise)?
+4. Would a human reading these documents have enough information to answer the query?
 
-You must respond with ONLY a JSON object:
+Respond with ONLY a JSON object:
 {
-  "retrieval_relevance": <float 0.0-1.0 — are retrieved docs relevant to the query?>,
-  "generation_fidelity": <float 0.0-1.0 — does the answer stick to facts in the docs?>,
-  "answer_completeness": <float 0.0-1.0 — does the answer fully address the query?>,
-  "knowledge_coverage": <float 0.0-1.0 — could the answer be derived from the docs?>,
-  "diagnosis": "faithful" | "retrieval_miss" | "retrieval_noise" | "generation_hallucination" | "generation_contradiction" | "knowledge_gap" | "partial_retrieval",
-  "root_cause": "<specific explanation of what went wrong and where>",
-  "fix_suggestion": "<actionable suggestion for the team>",
-  "retrieval_analysis": {
-    "relevant_docs": <count of docs actually relevant to query>,
-    "total_docs": <total retrieved docs>,
-    "missing_topics": "<topics the query asks about but docs don't cover>",
-    "noise_docs": "<docs that are irrelevant to the query>"
-  },
-  "generation_analysis": {
-    "fabricated_claims": ["<list of claims in the answer NOT supported by docs>"],
-    "contradicted_claims": ["<list of claims that CONTRADICT the docs>"],
-    "supported_claims": ["<list of claims properly grounded in docs>"],
-    "source_mapping": "<which doc supports which claim>"
+  "relevance_score": <float 0.0-1.0>,
+  "relevant_doc_indices": [<0-indexed list of relevant doc indices>],
+  "irrelevant_doc_indices": [<0-indexed list of irrelevant doc indices>],
+  "missing_topics": ["<topics the query asks about but docs don't cover>"],
+  "could_answer_from_docs": <true if docs contain enough info to answer>,
+  "reasoning": "<step-by-step analysis>"
+}
+
+Be SPECIFIC — cite exact parts of docs and query."""
+
+_GENERATION_AUDITOR_PROMPT = """You are a Generation Auditor. You ONLY analyze whether the generated answer is faithful to the retrieved documents. You do NOT assess whether the answer is correct in general — only whether it's grounded in the provided documents.
+
+For EACH distinct claim in the answer, determine:
+1. Is this claim directly supported by a specific passage in the documents?
+2. If supported, which document and what exact quote supports it?
+3. If NOT supported, is it a fabrication (not in docs at all) or a contradiction (opposite of what docs say)?
+
+Respond with ONLY a JSON object:
+{
+  "fidelity_score": <float 0.0-1.0>,
+  "claim_analysis": [
+    {
+      "claim": "<extracted claim from the answer>",
+      "grounded": <true/false>,
+      "source_doc_index": <0-indexed doc index or null>,
+      "source_quote": "<exact supporting quote from doc, or empty>",
+      "issue_type": "none" | "fabrication" | "contradiction" | "exaggeration" | "oversimplification",
+      "issue_detail": "<specific description of the problem>"
+    }
+  ],
+  "fabricated_claims": ["<claims with no basis in docs>"],
+  "contradicted_claims": ["<claims that oppose what docs say>"],
+  "reasoning": "<step-by-step analysis>"
+}
+
+Be PRECISE — quote exact text from both the answer and the documents."""
+
+_COVERAGE_AUDITOR_PROMPT = """You are a Coverage Auditor. You analyze whether the retrieved documents COULD contain the answer to the query, and whether the answer fully addresses what was asked.
+
+You assess two things:
+1. Knowledge coverage: Do the documents contain the information needed to answer the query?
+2. Answer completeness: Does the answer address all aspects of the query?
+
+Respond with ONLY a JSON object:
+{
+  "knowledge_coverage_score": <float 0.0-1.0 — could the query be answered from these docs?>,
+  "answer_completeness_score": <float 0.0-1.0 — does the answer address all parts of the query?>,
+  "query_aspects": ["<list of distinct things the query asks about>"],
+  "covered_aspects": ["<aspects that docs cover>"],
+  "uncovered_aspects": ["<aspects that docs DON'T cover>"],
+  "answered_aspects": ["<aspects the answer addresses>"],
+  "missed_aspects": ["<aspects the query asks about that the answer ignores>"],
+  "reasoning": "<step-by-step analysis>"
+}"""
+
+_DIAGNOSTIC_SYNTHESISER_PROMPT = """You are a Diagnostic Synthesiser. You receive independent analyses from three auditors who each examined a different aspect of a RAG pipeline. They did NOT see each other's work.
+
+Your job: combine their findings into a single ROOT CAUSE diagnosis.
+
+Auditor findings:
+- Retrieval Auditor: analyzed whether retrieved docs match the query
+- Generation Auditor: analyzed whether the answer is faithful to the docs
+- Coverage Auditor: analyzed whether docs could answer the query
+
+Diagnosis rules:
+- "faithful": All three auditors report positive scores. No issues found.
+- "retrieval_miss": Retrieval Auditor reports low relevance AND Coverage Auditor says docs can't answer the query. The problem is retrieval, not generation.
+- "retrieval_noise": Retrieval Auditor reports many irrelevant docs. LLM was confused by noise.
+- "generation_hallucination": Retrieval Auditor says docs are relevant, but Generation Auditor found fabricated claims. LLM added facts not in docs.
+- "generation_contradiction": Retrieval Auditor says docs are relevant, but Generation Auditor found contradicted claims. LLM stated the opposite of what docs say.
+- "knowledge_gap": Coverage Auditor says docs genuinely don't contain the needed info. This isn't a retrieval failure — the knowledge isn't in the KB at all.
+- "partial_retrieval": Some relevant docs retrieved but key ones missing. Coverage shows gaps.
+
+Respond with ONLY a JSON object:
+{
+  "diagnosis": "<one of the diagnosis categories above>",
+  "root_cause": "<specific, actionable explanation citing evidence from auditors>",
+  "fix_suggestion": "<concrete suggestion for the engineering team>",
+  "confidence": <float 0.0-1.0>,
+  "stage_scores": {
+    "retrieval_relevance": <from retrieval auditor>,
+    "generation_fidelity": <from generation auditor>,
+    "answer_completeness": <from coverage auditor>,
+    "knowledge_coverage": <from coverage auditor>
   }
 }
 
-Diagnosis rules:
-- "faithful": Answer is accurate and grounded in the retrieved documents
-- "retrieval_miss": Query asks about X but retrieved docs don't contain X (retrieval failure)
-- "retrieval_noise": Retrieved docs are mostly irrelevant, confusing the LLM
-- "generation_hallucination": Docs are fine but LLM added facts not in them
-- "generation_contradiction": LLM stated something that contradicts the docs
-- "knowledge_gap": The answer to the query genuinely doesn't exist in the docs
-- "partial_retrieval": Some relevant docs retrieved, but key ones missing
+The fix_suggestion must be SPECIFIC and ACTIONABLE:
+- Bad: "Improve retrieval"
+- Good: "Documents about [specific topic] are missing from the knowledge base. Add documentation covering [X, Y, Z] to the corpus."
+- Good: "Retrieval is correct but the LLM fabricates [specific fact]. Consider adding a system prompt constraint: 'Only state facts explicitly present in the provided documents.'"
+"""
 
-Be SPECIFIC in root_cause — cite exact text from the docs and answer.
-Be ACTIONABLE in fix_suggestion — tell the team exactly what to change."""
 
+# ── Engine ───────────────────────────────────────────────────────────
 
 async def diagnose_rag(
     query: str,
@@ -177,16 +272,13 @@ async def diagnose_rag(
     generated_answer: str,
     config: Config | None = None,
 ) -> RAGDiagnosticResult:
-    """Diagnose root cause of a RAG pipeline output.
+    """Diagnose root cause of a RAG pipeline output using multi-agent analysis.
 
-    Args:
-        query: The user's original query.
-        retrieved_docs: List of document strings that were retrieved.
-        generated_answer: The answer the RAG pipeline produced.
-        config: Optional Veritas config.
-
-    Returns:
-        RAGDiagnosticResult with diagnosis, scores, root cause, and fix suggestion.
+    Runs 3 auditors in parallel (isolation), then synthesises diagnosis.
+    Each auditor sees different information to prevent confirmation bias:
+    - Retrieval Auditor sees: query + docs (NOT the answer)
+    - Generation Auditor sees: docs + answer (analyzes faithfulness)
+    - Coverage Auditor sees: query + docs + answer (analyzes completeness)
     """
     if config is None:
         config = Config()
@@ -195,47 +287,103 @@ async def diagnose_rag(
     start = time.monotonic()
     provider = ClaudeProvider(model=config.model, api_key=config.anthropic_api_key)
 
-    # Build the diagnostic prompt
     docs_text = "\n\n---\n\n".join(
-        f"[Document {i+1}]\n{doc}" for i, doc in enumerate(retrieved_docs)
+        f"[Document {i}]\n{doc}" for i, doc in enumerate(retrieved_docs)
     )
-    prompt = (
+
+    # Build isolated prompts — each auditor gets different context
+    retrieval_prompt = (
+        f"## User Query\n{query}\n\n"
+        f"## Retrieved Documents ({len(retrieved_docs)} total)\n{docs_text}"
+    )
+
+    generation_prompt = (
+        f"## Retrieved Documents ({len(retrieved_docs)} total)\n{docs_text}\n\n"
+        f"## Generated Answer\n{generated_answer}"
+    )
+
+    coverage_prompt = (
         f"## User Query\n{query}\n\n"
         f"## Retrieved Documents ({len(retrieved_docs)} total)\n{docs_text}\n\n"
-        f"## Generated Answer\n{generated_answer}\n\n"
-        "Analyze the RAG pipeline and diagnose the root cause of any issues."
+        f"## Generated Answer\n{generated_answer}"
     )
 
-    response = await provider.generate(prompt, system=_DIAGNOSE_SYSTEM_PROMPT)
+    # Run all 3 auditors in parallel (isolated — they don't see each other's work)
+    retrieval_task = provider.generate(retrieval_prompt, system=_RETRIEVAL_AUDITOR_PROMPT)
+    generation_task = provider.generate(generation_prompt, system=_GENERATION_AUDITOR_PROMPT)
+    coverage_task = provider.generate(coverage_prompt, system=_COVERAGE_AUDITOR_PROMPT)
+
+    retrieval_raw, generation_raw, coverage_raw = await asyncio.gather(
+        retrieval_task, generation_task, coverage_task
+    )
+
+    # Parse auditor responses
+    retrieval_data = _parse_json(retrieval_raw)
+    generation_data = _parse_json(generation_raw)
+    coverage_data = _parse_json(coverage_raw)
+
+    # Build claim mappings from generation auditor
+    claim_mappings = []
+    for ca in generation_data.get("claim_analysis", []):
+        claim_mappings.append(ClaimMapping(
+            claim=ca.get("claim", ""),
+            grounded=ca.get("grounded", False),
+            source_doc_index=ca.get("source_doc_index"),
+            source_quote=ca.get("source_quote", ""),
+            issue=ca.get("issue_detail", ""),
+        ))
+
+    # Synthesise — pass all three auditor findings to the synthesiser
+    synth_prompt = (
+        f"## Retrieval Auditor Findings\n```json\n{json.dumps(retrieval_data, indent=2)}\n```\n\n"
+        f"## Generation Auditor Findings\n```json\n{json.dumps(generation_data, indent=2)}\n```\n\n"
+        f"## Coverage Auditor Findings\n```json\n{json.dumps(coverage_data, indent=2)}\n```"
+    )
+
+    synth_raw = await provider.generate(synth_prompt, system=_DIAGNOSTIC_SYNTHESISER_PROMPT)
+    synth_data = _parse_json(synth_raw)
+
     duration_ms = int((time.monotonic() - start) * 1000)
 
-    # Parse response
-    try:
-        text = response.strip()
-        if text.startswith("```"):
-            text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-        data = json.loads(text)
+    # Extract stage scores from synthesiser or fallback to individual auditors
+    stage_scores = synth_data.get("stage_scores", {})
 
-        return RAGDiagnosticResult(
-            diagnosis=RAGDiagnosis(data.get("diagnosis", "faithful")),
-            root_cause=data.get("root_cause", ""),
-            fix_suggestion=data.get("fix_suggestion", ""),
-            retrieval_relevance=float(data.get("retrieval_relevance", 0.0)),
-            generation_fidelity=float(data.get("generation_fidelity", 0.0)),
-            answer_completeness=float(data.get("answer_completeness", 0.0)),
-            knowledge_coverage=float(data.get("knowledge_coverage", 0.0)),
-            retrieval_analysis=data.get("retrieval_analysis", {}),
-            generation_analysis=data.get("generation_analysis", {}),
-            duration_ms=duration_ms,
-        )
-    except (json.JSONDecodeError, ValueError) as e:
-        return RAGDiagnosticResult(
-            diagnosis=RAGDiagnosis.FAITHFUL,
-            root_cause=f"Diagnostic parse error: {e}",
-            fix_suggestion="Re-run diagnosis",
-            retrieval_relevance=0.0,
-            generation_fidelity=0.0,
-            answer_completeness=0.0,
-            knowledge_coverage=0.0,
-            duration_ms=duration_ms,
-        )
+    return RAGDiagnosticResult(
+        diagnosis=RAGDiagnosis(synth_data.get("diagnosis", "faithful")),
+        root_cause=synth_data.get("root_cause", ""),
+        fix_suggestion=synth_data.get("fix_suggestion", ""),
+        retrieval_relevance=float(stage_scores.get(
+            "retrieval_relevance", retrieval_data.get("relevance_score", 0.0)
+        )),
+        generation_fidelity=float(stage_scores.get(
+            "generation_fidelity", generation_data.get("fidelity_score", 0.0)
+        )),
+        answer_completeness=float(stage_scores.get(
+            "answer_completeness", coverage_data.get("answer_completeness_score", 0.0)
+        )),
+        knowledge_coverage=float(stage_scores.get(
+            "knowledge_coverage", coverage_data.get("knowledge_coverage_score", 0.0)
+        )),
+        claim_mappings=claim_mappings,
+        retrieval_analysis=retrieval_data,
+        generation_analysis=generation_data,
+        coverage_analysis=coverage_data,
+        auditor_findings={
+            "retrieval": retrieval_data,
+            "generation": generation_data,
+            "coverage": coverage_data,
+            "synthesis": synth_data,
+        },
+        duration_ms=duration_ms,
+    )
+
+
+def _parse_json(text: str) -> dict:
+    """Parse JSON from LLM response, handling code blocks."""
+    try:
+        cleaned = text.strip()
+        if cleaned.startswith("```"):
+            cleaned = cleaned.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+        return json.loads(cleaned)
+    except (json.JSONDecodeError, ValueError, IndexError):
+        return {"error": f"Failed to parse: {text[:200]}"}
