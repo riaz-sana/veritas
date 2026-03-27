@@ -96,5 +96,42 @@ def benchmark(
         console.print(f"[red]Error: {e}[/red]")
         raise typer.Exit(code=1)
 
+@app.command()
+def compare(
+    dataset: str = typer.Option("sample", "--dataset", "-d", help="Dataset: sample, truthfulqa"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path"),
+    model_name: Optional[str] = typer.Option(None, "--model", "-m", help="LLM model to use"),
+):
+    """Compare isolation-divergent vs shared-context debate verification."""
+    from veritas.benchmarks.datasets import load_sample, load_truthfulqa
+    from veritas.benchmarks.comparison import run_comparison
+
+    loaders = {"sample": load_sample, "truthfulqa": load_truthfulqa}
+    if dataset not in loaders:
+        console.print(f"[red]Unknown dataset: {dataset}. Available: {', '.join(loaders)}[/red]")
+        raise typer.Exit(code=1)
+
+    try:
+        items = loaders[dataset]()
+        console.print(f"Running isolation vs debate comparison on {len(items)} items from [bold]{dataset}[/bold]...")
+        console.print("This runs each claim TWICE (isolation + debate). Please wait.\n")
+
+        config = Config()
+        if model_name:
+            config.model = model_name
+
+        result = asyncio.run(run_comparison(items, dataset_name=dataset, config=config))
+        console.print(result.summary())
+
+        if output:
+            with open(output, "w") as f:
+                f.write(result.to_json())
+            console.print(f"\nFull results written to {output}")
+
+    except Exception as e:
+        console.print(f"[red]Error: {e}[/red]")
+        raise typer.Exit(code=1)
+
+
 if __name__ == "__main__":
     app()
