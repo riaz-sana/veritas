@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+
+# Env
+.env
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Superpowers brainstorming sessions
+.superpowers/
+
+# Overstory runtime
+.overstory/worktrees/
+.overstory/logs/
