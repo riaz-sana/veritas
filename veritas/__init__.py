@@ -7,7 +7,25 @@ from veritas.core.result import (
 )
 from veritas.core.verify import verify
 
+# RAG Diagnostics (Option B)
+from veritas.diagnostics.rag import diagnose_rag, RAGDiagnosis, RAGDiagnosticResult
+
+# Pre-Action Verification (Option A)
+from veritas.agentic.verification import (
+    before_action, verify_action, verify_plan,
+    ActionVerdict, ActionVerificationResult, ActionRisk,
+    ActionBlockedError, ActionNeedsReviewError,
+)
+
 __all__ = [
-    "verify", "Config", "AgentModels", "VeritasConfigError", "Verdict", "VerificationResult",
-    "FailureMode", "FailureModeType", "AgentFinding", "ChallengeResult",
+    # Core
+    "verify", "Config", "AgentModels", "VeritasConfigError",
+    "Verdict", "VerificationResult", "FailureMode", "FailureModeType",
+    "AgentFinding", "ChallengeResult",
+    # RAG Diagnostics
+    "diagnose_rag", "RAGDiagnosis", "RAGDiagnosticResult",
+    # Pre-Action Verification
+    "before_action", "verify_action", "verify_plan",
+    "ActionVerdict", "ActionVerificationResult", "ActionRisk",
+    "ActionBlockedError", "ActionNeedsReviewError",
 ]
