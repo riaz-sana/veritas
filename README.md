@@ -62,9 +62,7 @@ We ran 7 experiments to find out. Some confirmed our hypotheses. Some didn't.
 
 | Hypothesis | Result |
 |-----------|--------|
-| "Information asymmetry prevents confirmation bias" | **Wrong.** Full-context evaluation [outperforms](docs/research/bias-headtohead-results.json) isolated agents 97.1% vs 91.4% on bias-triggering cases |
-| "Nobody does RAG root-cause diagnosis" | **Wrong.** [RAGVUE](https://arxiv.org/abs/2601.04196) (Jan 2026) and [RAG-X](https://arxiv.org/abs/2603.03541) (March 2026) do this |
-| "Nobody does pre-action verification" | **Wrong.** [Superagent](https://github.com/superagent-ai/superagent) Safety Agent (Dec 2025) does this |
+| "Information asymmetry prevents confirmation bias" | Full-context evaluation [outperforms](docs/research/bias-headtohead-results.json) isolated agents 97.1% vs 91.4% on bias-triggering cases |
 
 Full experiment details, raw data, and methodology: **[docs/research/FINDINGS.md](docs/research/FINDINGS.md)**
 
