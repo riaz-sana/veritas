@@ -1,0 +1,20 @@
+{
+  "total_cases": 8,
+  "total_claims": 33,
+  "ragvue_style": {
+    "correct": 33,
+    "accuracy": 1.0,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "duration_ms": 29900,
+    "llm_calls": 8
+  },
+  "veritas_asymmetry": {
+    "correct": 33,
+    "accuracy": 1.0,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "duration_ms": 30019,
+    "llm_calls": 16
+  }
+}
